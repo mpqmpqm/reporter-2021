@@ -4,6 +4,12 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  background: black;
+  color: whitesmoke;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 a {
@@ -13,4 +19,21 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+input[type="radio"] {
+  display: none;
+}
+
+div.board-select {
+  margin: 8px 0;
+}
+
+div.board-select label {
+  padding: 4px 12px;
+}
+
+div.board-select.selected label {
+  background-color: #666;
+  color: black;
 }
