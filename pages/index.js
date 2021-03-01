@@ -28,7 +28,8 @@ const Wrappers = ({ children }) => {
   )
 }
 
-export default function App(props) {
+export default function App({ onboarded }) {
+  console.log(onboarded)
   return (
     <Wrappers>
       <Home />
@@ -55,6 +56,9 @@ const Home = (props) => {
               <Link to="/data">data</Link>
               <Link to="/test">test</Link>
               <Link to="/vote">vote</Link>
+              <button onClick={() => nookies.destroy(undefined, `onboarded`)}>
+                Destroy
+              </button>
             </>
           ) : (
             <Link to="/login-dev">login</Link>
@@ -99,7 +103,7 @@ export const getServerSideProps = async (ctx) => {
     return { props: {} }
   }
   try {
-    if (cookies.newUser) {
+    if (cookies.firestoreNotInitialized) {
       const db = firebaseAdmin.firestore()
       const createdDoc = await db
         .collection(`users`)
@@ -111,9 +115,6 @@ export const getServerSideProps = async (ctx) => {
           symbols: [`😘`, `😔`],
         })
         .then((createdDoc) => createdDoc.id)
-        .catch((err) => {
-          throw new Error(err)
-        })
 
       createdDoc &&
         (await db
@@ -125,9 +126,9 @@ export const getServerSideProps = async (ctx) => {
             selected: createdDoc,
           }))
 
-      nookies.destroy(ctx, `newUser`)
+      nookies.destroy(ctx, `firestoreNotInitialized`)
     }
-    return { props: {} }
+    return { props: cookies }
   } catch (err) {
     console.error(err)
     ctx.res.writeHead(302, { Location: `/failed-onboarding` })

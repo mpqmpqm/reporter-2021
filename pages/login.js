@@ -6,12 +6,13 @@ import nookies from "nookies"
 const login = () => {
   // const { user } = useAuth()
 
-  const user = `test3@mpq.dev`
+  const user = `test1@mpq.dev`
   const pw = `ecksdee`
 
   const createUser = async () => {
     await firebase.auth().createUserWithEmailAndPassword(user, pw)
-    nookies.set(undefined, `newUser`, true)
+    nookies.set(undefined, `firestoreNotInitialized`, "true", { path: `/` })
+    nookies.set(undefined, `onboarded`, "false", { path: `/` })
     window.location.href = `/`
   }
 
