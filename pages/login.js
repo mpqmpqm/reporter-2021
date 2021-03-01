@@ -1,12 +1,22 @@
 import React, { useEffect } from "react"
 import { useAuth } from "../firebase/AuthContextProvider"
 import { firebase } from "../firebase/firebaseClient"
+import nookies from "nookies"
 
 const login = () => {
   // const { user } = useAuth()
 
+  const user = `test3@mpq.dev`
+  const pw = `ecksdee`
+
+  const createUser = async () => {
+    await firebase.auth().createUserWithEmailAndPassword(user, pw)
+    nookies.set(undefined, `newUser`, true)
+    window.location.href = `/`
+  }
+
   const signIn = async () => {
-    await firebase.auth().signInWithEmailAndPassword(`test@mpq.dev`, `ecksdee`)
+    await firebase.auth().signInWithEmailAndPassword(user, pw)
     window.location.href = `/`
   }
 
@@ -17,7 +27,8 @@ const login = () => {
   return (
     <div>
       Login, doy!
-      <button onClick={signIn}>Sign in</button>
+      <button onClick={createUser}>Create</button>
+      <button onClick={signIn}>sign in</button>
     </div>
   )
 }

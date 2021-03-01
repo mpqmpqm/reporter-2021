@@ -10,18 +10,26 @@ function MyApp({ Component, pageProps }) {
     <div suppressHydrationWarning>
       {typeof window === `undefined` ? null : (
         <AuthContextProvider>
-          <FirestoreContextProvider>
-            <SelectedBoardContextProvider>
-              <TodayDateStringContextProvider>
-                <TodayContextProvider>
-                  <Component {...pageProps} />
-                </TodayContextProvider>
-              </TodayDateStringContextProvider>
-            </SelectedBoardContextProvider>
-          </FirestoreContextProvider>
+          <Component {...pageProps} />
         </AuthContextProvider>
       )}
     </div>
+
+    // <div suppressHydrationWarning>
+    //   {typeof window === `undefined` ? null : (
+    //     <AuthContextProvider>
+    //       <FirestoreContextProvider>
+    //         <SelectedBoardContextProvider>
+    //           <TodayDateStringContextProvider>
+    //             <TodayContextProvider>
+    //               <Component {...pageProps} />
+    //             </TodayContextProvider>
+    //           </TodayDateStringContextProvider>
+    //         </SelectedBoardContextProvider>
+    //       </FirestoreContextProvider>
+    //     </AuthContextProvider>
+    //   )}
+    // </div>
   )
 }
 
