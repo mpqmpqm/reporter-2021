@@ -1,37 +1,41 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { useAuth } from "../firebase/AuthContextProvider"
 import { firebase } from "../firebase/firebaseClient"
 import nookies from "nookies"
+import { firebaseAdmin } from "../firebase/firebaseAdmin"
+import { SignUp, Login } from "../views/Login"
 
 const login = () => {
-  // const { user } = useAuth()
+  const [isLoginFlow, setIsLoginFlow] = useState(true)
 
-  const user = `test1@mpq.dev`
-  const pw = `ecksdee`
-
-  const createUser = async () => {
-    await firebase.auth().createUserWithEmailAndPassword(user, pw)
-    nookies.set(undefined, `firestoreNotInitialized`, "true", { path: `/` })
-    nookies.set(undefined, `onboarded`, "false", { path: `/` })
-    window.location.href = `/`
+  const handleSwitch = () => {
+    setIsLoginFlow(!isLoginFlow)
   }
 
-  const signIn = async () => {
-    await firebase.auth().signInWithEmailAndPassword(user, pw)
-    window.location.href = `/`
-  }
-
-  // useEffect(() => {
-  //   console.log(user)
-  // }, [user])
-
-  return (
+  return isLoginFlow ? (
     <div>
-      Login, doy!
-      <button onClick={createUser}>Create</button>
-      <button onClick={signIn}>sign in</button>
+      <Login />
+      <button onClick={handleSwitch}>Sign up &rarr;</button>
+    </div>
+  ) : (
+    <div>
+      <SignUp />
+      <button onClick={handleSwitch}>Sign in &rarr;</button>
     </div>
   )
 }
 
 export default login
+
+export const getServerSideProps = async (ctx) => {
+  try {
+    const cookies = nookies.get(ctx)
+    const token = await firebaseAdmin.auth().verifyIdToken(cookies.token)
+    ctx.res.writeHead(302, { Location: `/` })
+    ctx.res.end()
+    return { props: {} }
+  } catch (err) {
+    console.error(err)
+    return { props: {} }
+  }
+}

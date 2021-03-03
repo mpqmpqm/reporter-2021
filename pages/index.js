@@ -1,138 +1,93 @@
-import { BrowserRouter, Link, Route } from "react-router-dom"
-import Data from "../views/Data"
-import Settings from "../views/Settings"
+import nookies from "nookies"
+import { BrowserRouter, Link, Route, Switch } from "react-router-dom"
+import AppContextProvider from "../context/AppContextProvider"
+import { useSelectedBoard } from "../context/SelectedBoardContextProvider"
 import PopulateBoard from "../dev/PopulateBoard"
 import { useAuth } from "../firebase/AuthContextProvider"
+// import { firebaseAdmin } from "../firebase/firebaseAdmin"
 import { firebase } from "../firebase/firebaseClient"
-import { firebaseAdmin } from "../firebase/firebaseAdmin"
-
-import { useMonth } from "../hooks/useMonth"
-import { useSelectedBoard } from "../context/SelectedBoardContextProvider"
+import Data from "../views/Data"
+import Settings from "../views/Settings"
 import Vote from "../views/Vote"
-import nookies from "nookies"
-import Login from "../views/Login"
-import { FirestoreContextProvider } from "../firebase/FirestoreContextProvider"
-import { SelectedBoardContextProvider } from "../context/SelectedBoardContextProvider"
-import { TodayDateStringContextProvider } from "../context/TodayDateStringContextProvider"
-import { TodayContextProvider } from "../context/TodayContextProvider"
+import { NavBar } from "../components/Navigation"
 
-const Wrappers = ({ children }) => {
+export default function Home({ onboarded }) {
   return (
-    <FirestoreContextProvider>
-      <SelectedBoardContextProvider>
-        <TodayDateStringContextProvider>
-          <TodayContextProvider>{children}</TodayContextProvider>
-        </TodayDateStringContextProvider>
-      </SelectedBoardContextProvider>
-    </FirestoreContextProvider>
+    <AppContextProvider>
+      <App {...{ onboarded }} />
+    </AppContextProvider>
   )
 }
 
-export default function App({ onboarded }) {
-  console.log(onboarded)
-  return (
-    <Wrappers>
-      <Home />
-    </Wrappers>
-  )
-}
-
-const Home = (props) => {
-  const signOut = async () => {
-    firebase.auth().signOut()
-    window.location.href = `/`
-  }
-
+const App = ({ onboarded }) => {
   const { user } = useAuth()
   const { selectedBoard } = useSelectedBoard()
 
   return (
-    <Wrappers>
-      <BrowserRouter>
-        <nav>
-          {user && selectedBoard ? (
-            <>
-              <Link to="/settings">settings</Link>
-              <Link to="/data">data</Link>
-              <Link to="/test">test</Link>
-              <Link to="/vote">vote</Link>
-              <button onClick={() => nookies.destroy(undefined, `onboarded`)}>
-                Destroy
-              </button>
-            </>
-          ) : (
-            <Link to="/login-dev">login</Link>
-          )}
-        </nav>
-        {user && selectedBoard ? (
-          <>
-            <Route path="/settings">
-              <Settings />
-            </Route>
-            <Route path="/data">
-              <Data />
-            </Route>
-            <Route path="/test">
-              <PopulateBoard />
-            </Route>
-            <Route path="/vote">
-              <Vote />
-            </Route>
-          </>
-        ) : (
-          <Route path="/login-dev">
-            <Login />
+    <div className="App">
+      {user && selectedBoard ? (
+        <Switch>
+          <Route path="/settings">
+            <Settings />
           </Route>
-        )}
-      </BrowserRouter>
-    </Wrappers>
+          <Route path="/calendar">
+            <Data />
+          </Route>
+          <Route path="/">
+            <Vote />
+          </Route>
+        </Switch>
+      ) : (
+        <div>...</div>
+      )}
+      <NavBar />
+    </div>
   )
 }
 
-export const getServerSideProps = async (ctx) => {
-  let cookies
-  let token
-  try {
-    cookies = nookies.get(ctx)
-    token = await firebaseAdmin.auth().verifyIdToken(cookies.token)
-    if (!token) throw new Error()
-  } catch (err) {
-    console.error(err)
-    ctx.res.writeHead(302, { Location: `/login` })
-    ctx.res.end()
-    return { props: {} }
-  }
-  try {
-    if (cookies.firestoreNotInitialized) {
-      const db = firebaseAdmin.firestore()
-      const createdDoc = await db
-        .collection(`users`)
-        .doc(token.uid)
-        .collection(`boards`)
-        .add({
-          createdAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
-          title: `Mood`,
-          symbols: [`😘`, `😔`],
-        })
-        .then((createdDoc) => createdDoc.id)
+// export const getServerSideProps = async (ctx) => {
+//   let cookies
+//   let token
+//   try {
+//     cookies = nookies.get(ctx)
+//     token = await firebaseAdmin.auth().verifyIdToken(cookies.token)
+//   } catch (err) {
+//     console.error(err)
+//     ctx.res.writeHead(302, { Location: `/login` })
+//     ctx.res.end()
+//     return { props: {} }
+//   }
+//   try {
+//     if (cookies.firestoreNotInitialized) {
+//       const db = firebaseAdmin.firestore()
+//       const createdDoc = await db
+//         .collection(`users`)
+//         .doc(token.uid)
+//         .collection(`boards`)
+//         .add({
+//           createdAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
+//           title: `Mood`,
+//           symbols: [`😔`, `😘`],
+//         })
+//         .then((createdDoc) => createdDoc.id)
 
-      createdDoc &&
-        (await db
-          .collection(`users`)
-          .doc(token.uid)
-          .collection(`boards`)
-          .doc(`selected`)
-          .set({
-            selected: createdDoc,
-          }))
+//       createdDoc &&
+//         (await db
+//           .collection(`users`)
+//           .doc(token.uid)
+//           .collection(`boards`)
+//           .doc(`selected`)
+//           .set({
+//             selected: createdDoc,
+//           }))
 
-      nookies.destroy(ctx, `firestoreNotInitialized`)
-    }
-    return { props: cookies }
-  } catch (err) {
-    console.error(err)
-    ctx.res.writeHead(302, { Location: `/failed-onboarding` })
-    ctx.res.end()
-    return { props: {} }
-  }
-}
+//       nookies.destroy(ctx, `firestoreNotInitialized`)
+//     }
+//     return { props: { onboarded: cookies.onboarded || true } }
+//   } catch (err) {
+//     console.error(err)
+//     ctx.res.writeHead(302, { Location: `/failed-onboarding` })
+//     ctx.res.end()
+//     return { props: {} }
+//   }
+// }

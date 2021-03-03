@@ -7,29 +7,13 @@ import { TodayContextProvider } from "../context/TodayContextProvider"
 
 function MyApp({ Component, pageProps }) {
   return (
-    <div suppressHydrationWarning>
+    <div suppressHydrationWarning id="__app">
       {typeof window === `undefined` ? null : (
         <AuthContextProvider>
           <Component {...pageProps} />
         </AuthContextProvider>
       )}
     </div>
-
-    // <div suppressHydrationWarning>
-    //   {typeof window === `undefined` ? null : (
-    //     <AuthContextProvider>
-    //       <FirestoreContextProvider>
-    //         <SelectedBoardContextProvider>
-    //           <TodayDateStringContextProvider>
-    //             <TodayContextProvider>
-    //               <Component {...pageProps} />
-    //             </TodayContextProvider>
-    //           </TodayDateStringContextProvider>
-    //         </SelectedBoardContextProvider>
-    //       </FirestoreContextProvider>
-    //     </AuthContextProvider>
-    //   )}
-    // </div>
   )
 }
 

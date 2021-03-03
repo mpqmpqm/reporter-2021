@@ -1,30 +1,51 @@
-import { ThisMonth } from "../components/Month"
+import { Month, ThisMonth } from "../components/Month"
 import { useSelectedBoard } from "../context/SelectedBoardContextProvider"
 import { useToday } from "../context/TodayContextProvider"
+import {
+  getMonthBefore,
+  isEndOfMonthBeforeCreatedAt,
+} from "../helper-fns/helper-fns"
+import { colorOptions } from "../helper-fns/dictionaries"
+import View from "./View"
 
 const Data = () => {
   const { selectedBoard } = useSelectedBoard()
-  const { todayData, sendReport } = useToday()
+  const { todayDateString } = useToday()
+
+  const buildMonths = (monthBefore) => {
+    const { createdAt } = selectedBoard.details
+    return isEndOfMonthBeforeCreatedAt({ date: monthBefore.date, createdAt })
+      ? []
+      : [
+          <Month
+            month={monthBefore.month}
+            year={monthBefore.year}
+            key={monthBefore.month + monthBefore.year}
+            symbols={selectedBoard.details.symbols.join()}
+          />,
+          ...buildMonths(getMonthBefore({ date: monthBefore.date })),
+        ]
+  }
 
   return (
-    <div>
-      {Object.entries(todayData)
-        .filter(([symbol]) => symbol !== `createdAt`)
-        .map(([symbol, count], i) => (
-          <div key={i}>
-            <p>
-              {symbol}: {count}
-            </p>
-            <button
-              onClick={({ target: { value } }) => sendReport(value)}
-              value={symbol}
-            >
-              {symbol}
-            </button>
+    <View pageTitle={selectedBoard.details.title}>
+      <div>
+        {selectedBoard.details.symbols.map((symbol, i) => (
+          <div key={symbol}>
+            <div>{symbol}</div>
+            <div
+              style={{
+                height: `24px`,
+                width: `24px`,
+                backgroundColor: colorOptions[i],
+              }}
+            />
           </div>
         ))}
-      <ThisMonth />
-    </div>
+      </div>
+      <ThisMonth symbols={selectedBoard.details.symbols.join()} />
+      {buildMonths(getMonthBefore({ date: new Date(todayDateString) }))}
+    </View>
   )
 }
 

@@ -16,8 +16,19 @@ export const SelectedBoardContextProvider = ({ children }) => {
         .append(`boards`)
         .append(`selected`)
         .close()
-        .onSnapshot((doc) => setSelectedBoard(doc.data().selected))
+        .onSnapshot(async (doc) => {
+          const id = await doc.data().selected
+          // then update the context with the details of the selected board
+          const selectedBoardDetails = await userDocumentStub
+            .append(`boards`)
+            .append(id)
+            .close()
+            .get()
+            .then((doc) => doc.data())
+          setSelectedBoard({ id, details: selectedBoardDetails })
+        })
     }
+    return unsubscribe
   }, [userDocumentStub])
 
   return (

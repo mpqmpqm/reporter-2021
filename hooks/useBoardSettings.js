@@ -21,7 +21,7 @@ export const useBoardSettings = () => {
 
   const [availableBoards, setAvailableBoards] = useState([])
 
-  // listen for updates to avaialble boards
+  // listen for updates to available boards
   useEffect(() => {
     let unsubscribe
     if (boardsReference) {

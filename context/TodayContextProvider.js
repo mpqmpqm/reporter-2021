@@ -18,7 +18,7 @@ export const TodayContextProvider = ({ children }) => {
     todayDateString &&
     userDocumentStub
       .append(`boards`)
-      .append(selectedBoard)
+      .append(selectedBoard.id)
       .append(`data`)
       .append(todayDateString)
 
@@ -28,19 +28,13 @@ export const TodayContextProvider = ({ children }) => {
     const asyncHelper = async () => {
       if (todayDocumentStub) {
         // make sure today's doc exists for this user for this board
-        await db.runTransaction(async (transaction) => {
-          await transaction.get(todayDocumentStub.close()).then(async (doc) => {
+        const { symbols } = selectedBoard.details
+        await todayDocumentStub
+          .close()
+          .get()
+          .then(async (doc) => {
             if (!doc.exists) {
-              const symbols = await transaction
-                .get(
-                  userDocumentStub
-                    .append(`boards`)
-                    .append(selectedBoard)
-                    .close()
-                )
-                .then((doc) => doc.data().symbols)
-
-              await transaction.set(todayDocumentStub.close(), {
+              await todayDocumentStub.close().set({
                 createdAt: FieldValue.serverTimestamp(),
                 ...symbols.reduce((object, symbol) => {
                   object[symbol] = 0
@@ -49,9 +43,10 @@ export const TodayContextProvider = ({ children }) => {
               })
             }
           })
-        })
         // then subscribe
-        todayDocumentStub.close().onSnapshot((doc) => setTodayData(doc.data()))
+        unsubscribe = todayDocumentStub
+          .close()
+          .onSnapshot((doc) => setTodayData(doc.data()))
       }
     }
     asyncHelper()

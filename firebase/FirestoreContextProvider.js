@@ -10,7 +10,7 @@ const FirestorePath = (pathString) => ({
     pathString.match(/\//g).length % 2
       ? db.doc(pathString)
       : db.collection(pathString),
-  inspect: () => pathString,
+  inspect: () => console.log(pathString),
 })
 
 export const FirestoreContextProvider = ({ children }) => {
