@@ -6,6 +6,8 @@ import "firebase/functions"
 let db
 let FieldValue
 
+const dev = process.env.NODE_ENV === `development`
+
 if (typeof window !== "undefined" && !firebase.apps.length) {
   firebase.initializeApp({
     apiKey: process.env.NEXT_PUBLIC_API_KEY,
@@ -19,12 +21,12 @@ if (typeof window !== "undefined" && !firebase.apps.length) {
   firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
 
   db = firebase.firestore()
-  // if (location.hostname === process.env.NEXT_PUBLIC_HOST) {
-  //   firebase.functions().useEmulator(process.env.NEXT_PUBLIC_HOST, 5001)
-  //   firebase.auth().useEmulator(`http://${process.env.NEXT_PUBLIC_HOST}:9099`)
-  //   db.useEmulator(process.env.NEXT_PUBLIC_HOST, 8080)
-  // }
-  db.enablePersistence().catch((err) => console.error(err))
+  if (dev) {
+    firebase.functions().useEmulator(process.env.NEXT_PUBLIC_HOST, 5001)
+    firebase.auth().useEmulator(`http://${process.env.NEXT_PUBLIC_HOST}:9099`)
+    db.useEmulator(process.env.NEXT_PUBLIC_HOST, 8080)
+  }
+  if (!dev) db.enablePersistence().catch((err) => console.error(err))
 
   FieldValue = firebase.firestore.FieldValue
 }
