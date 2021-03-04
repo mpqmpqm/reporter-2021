@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from "react"
-import { useAuth } from "../firebase/AuthContextProvider"
-import { firebase } from "../firebase/firebaseClient"
 import nookies from "nookies"
+import { useState } from "react"
 import { firebaseAdmin } from "../firebase/firebaseAdmin"
-import { SignUp, Login } from "../views/Login"
+import { Login, SignUp } from "../views/Login"
 
 const login = () => {
   const [isLoginFlow, setIsLoginFlow] = useState(true)

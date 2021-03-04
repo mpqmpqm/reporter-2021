@@ -1,4 +1,3 @@
-import React from "react"
 import DayContentful from "./DayContentful"
 import DayEmpty from "./DayEmpty"
 

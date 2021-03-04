@@ -1,7 +1,6 @@
 import { useSelectedBoard } from "../context/SelectedBoardContextProvider"
 import { useToday } from "../context/TodayContextProvider"
 import View from "./View"
-import { colorOptions } from "../helper-fns/dictionaries"
 
 const Vote = () => {
   const { selectedBoard } = useSelectedBoard()

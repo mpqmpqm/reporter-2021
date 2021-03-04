@@ -1,9 +1,8 @@
-import React from "react"
+import { BrowserRouter } from "react-router-dom"
 import { FirestoreContextProvider } from "../firebase/FirestoreContextProvider"
 import { SelectedBoardContextProvider } from "./SelectedBoardContextProvider"
-import { TodayDateStringContextProvider } from "./TodayDateStringContextProvider"
 import { TodayContextProvider } from "./TodayContextProvider"
-import { BrowserRouter } from "react-router-dom"
+import { TodayDateStringContextProvider } from "./TodayDateStringContextProvider"
 
 const AppContextProvider = ({ children }) => (
   <FirestoreContextProvider>

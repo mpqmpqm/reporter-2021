@@ -1,6 +1,5 @@
+import { useEffect, useState } from "react"
 import { useFirestore } from "../firebase/FirestoreContextProvider"
-import { useSelectedBoard } from "../context/SelectedBoardContextProvider"
-import { useState, useEffect, createContext } from "react"
 
 export const useBoardSettings = () => {
   const { userDocumentStub, FieldValue } = useFirestore()

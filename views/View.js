@@ -1,5 +1,3 @@
-import React from "react"
-
 const View = ({ pageTitle, children, id }) => {
   return (
     <div className="View" id={id}>

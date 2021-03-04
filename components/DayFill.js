@@ -1,5 +1,3 @@
-import React from "react"
-
 const DayFill = ({ color, height, y }) => (
   <rect
     x="0"

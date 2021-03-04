@@ -1,9 +1,5 @@
-import "../styles/globals.css"
 import { AuthContextProvider } from "../firebase/AuthContextProvider"
-import { FirestoreContextProvider } from "../firebase/FirestoreContextProvider"
-import { SelectedBoardContextProvider } from "../context/SelectedBoardContextProvider"
-import { TodayDateStringContextProvider } from "../context/TodayDateStringContextProvider"
-import { TodayContextProvider } from "../context/TodayContextProvider"
+import "../styles/globals.css"
 
 function MyApp({ Component, pageProps }) {
   return (

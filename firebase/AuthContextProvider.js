@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext, createContext } from "react"
-import { firebase } from "./firebaseClient"
 import nookies from "nookies"
+import { createContext, useContext, useEffect, useState } from "react"
+import { firebase } from "./firebaseClient"
 
 const AuthContext = createContext({
   user: null,

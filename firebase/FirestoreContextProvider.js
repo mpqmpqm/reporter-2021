@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react"
-import { db, FieldValue } from "./firebaseClient"
 import { useAuth } from "./AuthContextProvider"
+import { db, FieldValue } from "./firebaseClient"
 
 const firestoreContext = createContext(null)
 

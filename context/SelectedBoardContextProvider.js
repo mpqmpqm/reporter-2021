@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useContext } from "react"
+import { createContext, useContext, useEffect, useState } from "react"
 import { useFirestore } from "../firebase/FirestoreContextProvider"
 
 const SelectedBoardContext = createContext(null)
