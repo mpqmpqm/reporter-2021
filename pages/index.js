@@ -3,11 +3,12 @@ import { Route, Switch } from "react-router-dom"
 import { NavBar } from "../components/Navigation"
 import AppContextProvider from "../context/AppContextProvider"
 import { useSelectedBoard } from "../context/SelectedBoardContextProvider"
+import PopulateBoard from "../dev/PopulateBoard"
 import { useAuth } from "../firebase/AuthContextProvider"
-import Data from "../views/Data"
+import { firebaseAdmin } from "../firebase/firebaseAdmin"
+import Calendar from "../views/Calendar"
 import Settings from "../views/Settings"
 import Vote from "../views/Vote"
-import { firebaseAdmin } from "../firebase/firebaseAdmin"
 
 export default function Home({ onboarded }) {
   return (
@@ -29,7 +30,11 @@ const App = ({ onboarded }) => {
             <Settings />
           </Route>
           <Route path="/calendar">
-            <Data />
+            <Calendar />
+          </Route>
+
+          <Route path="/cheat">
+            <PopulateBoard />
           </Route>
           <Route path="/">
             <Vote />

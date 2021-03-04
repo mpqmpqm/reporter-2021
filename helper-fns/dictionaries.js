@@ -13,4 +13,18 @@ export const monthDict = {
   12: `December`,
 }
 
-export const colorOptions = [`#3a86f6`, `#ffbe0b`, `#8338ec`]
+export const colorOptions = [
+  `#3a86f6`,
+  `#ffbe0b`,
+  `#8338ec`,
+  `#e63946`,
+  `#a8dadc`,
+  `#ffe8d6`,
+  `#283618`,
+  `#a0c4ff`,
+  `#bc6c25`,
+  `#ff006e`,
+  `#e5e5e5`,
+  `#8ac926`,
+  `#c77dff`,
+]

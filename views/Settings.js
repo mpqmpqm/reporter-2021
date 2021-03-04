@@ -9,7 +9,7 @@ const Settings = () => {
 
   const handleAddBoard = () => {
     const title = window.prompt(`name for your board?`)
-    const symbols = window.prompt(`emoji to track, separated by comma`)
+    const symbols = window.prompt(`emoji to track?`)
     title &&
       symbols &&
       addBoard({

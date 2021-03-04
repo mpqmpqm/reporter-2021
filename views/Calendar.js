@@ -1,14 +1,15 @@
+import Legend from "../components/Legend"
 import { Month, ThisMonth } from "../components/Month"
 import { useSelectedBoard } from "../context/SelectedBoardContextProvider"
 import { useToday } from "../context/TodayContextProvider"
+import { colorOptions } from "../helper-fns/dictionaries"
 import {
   getMonthBefore,
   isEndOfMonthBeforeCreatedAt,
 } from "../helper-fns/helper-fns"
-import { colorOptions } from "../helper-fns/dictionaries"
 import View from "./View"
 
-const Data = () => {
+const Calendar = () => {
   const { selectedBoard } = useSelectedBoard()
   const { todayDateString } = useToday()
 
@@ -21,32 +22,31 @@ const Data = () => {
             month={monthBefore.month}
             year={monthBefore.year}
             key={monthBefore.month + monthBefore.year}
-            symbols={selectedBoard.details.symbols.join()}
+            symbols={selectedBoard.details.symbols}
+            {...{ triggerOverlay }}
           />,
           ...buildMonths(getMonthBefore({ date: monthBefore.date })),
         ]
   }
 
   return (
-    <View pageTitle={selectedBoard.details.title}>
-      <div>
-        {selectedBoard.details.symbols.map((symbol, i) => (
-          <div key={symbol}>
-            <div>{symbol}</div>
-            <div
-              style={{
-                height: `24px`,
-                width: `24px`,
-                backgroundColor: colorOptions[i],
-              }}
-            />
-          </div>
-        ))}
+    <View pageTitle={selectedBoard.details.title} id="Calendar">
+      <Legend
+        symbols={selectedBoard.details.symbols}
+        colors={
+          selectedBoard.details.colors ||
+          colorOptions.slice(0, selectedBoard.details.symbols.length)
+        }
+      />
+      <div id="calendar-scroll">
+        <ThisMonth
+          symbols={selectedBoard.details.symbols}
+          {...{ triggerOverlay }}
+        />
+        {buildMonths(getMonthBefore({ date: new Date(todayDateString) }))}
       </div>
-      <ThisMonth symbols={selectedBoard.details.symbols.join()} />
-      {buildMonths(getMonthBefore({ date: new Date(todayDateString) }))}
     </View>
   )
 }
 
-export default Data
+export default Calendar

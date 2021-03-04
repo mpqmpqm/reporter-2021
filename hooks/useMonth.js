@@ -1,13 +1,13 @@
+import {
+  eachDayOfInterval,
+  lastDayOfMonth,
+  parseISO,
+  startOfMonth,
+} from "date-fns"
+import { useEffect, useState } from "react"
+import { useSelectedBoard } from "../context/SelectedBoardContextProvider"
 import { useTodayDateString } from "../context/TodayDateStringContextProvider"
 import { useFirestore } from "../firebase/FirestoreContextProvider"
-import { useSelectedBoard } from "../context/SelectedBoardContextProvider"
-import { useState, useEffect } from "react"
-import {
-  startOfMonth,
-  lastDayOfMonth,
-  eachDayOfInterval,
-  parseISO,
-} from "date-fns"
 import { createDateString } from "../helper-fns/helper-fns"
 
 const yearMonthDay = new RegExp(/\d{4}\/\d{2}\/\d{2}$/)
@@ -34,8 +34,9 @@ export const useMonth = (year, month, thisMonth = false) => {
         const data = new Map()
         await monthCollectionStub
           .close()
-          .where(`createdAt`, `<`, new Date(todayDateString))
-          .get({ source: !thisMonth ? `cache` : `default` })
+          // .where(`createdAt`, `<`, new Date(todayDateString))
+          // .get({ source: !thisMonth ? `cache` : `default` })
+          .get()
           .then((collectionSnapshot) => {
             collectionSnapshot.forEach((doc) => {
               const date = doc.ref.path.match(yearMonthDay)[0]
@@ -66,13 +67,14 @@ export const useMonth = (year, month, thisMonth = false) => {
           end: monthEnd,
         })
           .slice(0, thisMonth ? -1 : undefined)
+          // .reverse()
           .map((date) => createDateString(date))
 
         const fullMonth = eachDay.map((date) => ({
           date,
           data: data.get(date) || null,
         }))
-        setMonthData(fullMonth)
+        setMonthData({ renderElements: fullMonth, dict: data })
       }
     }
     asyncHelper()

@@ -1,11 +1,9 @@
+import { useEffect, useState } from "react"
 import { useSelectedBoard } from "../context/SelectedBoardContextProvider"
 import { useFirestore } from "../firebase/FirestoreContextProvider"
-import { useState } from "react"
 
 const PopulateBoard = () => {
-  const [year, setYear] = useState(`2021`)
-  const [month, setMonth] = useState(`01`)
-  const [day, setDay] = useState(`01`)
+  const [date, setDate] = useState(null)
 
   const { userDocumentStub, FieldValue } = useFirestore()
   const { selectedBoard } = useSelectedBoard()
@@ -13,21 +11,23 @@ const PopulateBoard = () => {
   const dayDocumentStub =
     userDocumentStub &&
     selectedBoard &&
+    date &&
     userDocumentStub
       .append(`boards`)
       .append(selectedBoard.id)
       .append(`data`)
-      .append(year)
-      .append(month)
-      .append(day)
+      .append(date.replace(/-/g, `/`))
 
-  const createDoc = () => {
-    if (dayDocumentStub) {
-      dayDocumentStub.close().set({
-        createdAt: new Date(year, month - 1, day),
-      })
-    }
+  const handleDateSelect = ({ target: { value } }) => {
+    setDate(value)
   }
+
+  useEffect(() => {
+    dayDocumentStub &&
+      dayDocumentStub.close().set({
+        createdAt: new Date(date),
+      })
+  }, [date])
 
   const handleClick = ({ target: { value } }) => {
     dayDocumentStub.close().update({
@@ -39,10 +39,7 @@ const PopulateBoard = () => {
     selectedBoard && (
       <div>
         <h1>{selectedBoard.details.title}</h1>
-        <input value={year} onChange={(e) => setYear(e.target.value)} />
-        <input value={month} onChange={(e) => setMonth(e.target.value)} />
-        <input value={day} onChange={(e) => setDay(e.target.value)} />
-        <button onClick={createDoc}>Create doc</button>
+        <input type="date" onSelect={handleDateSelect} />
         {selectedBoard.details.symbols.map((symbol, i) => (
           <div key={i}>
             <button onClick={handleClick} value={symbol}>

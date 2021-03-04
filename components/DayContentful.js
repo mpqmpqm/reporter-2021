@@ -1,6 +1,7 @@
 import React from "react"
-import DayFill from "./DayFill"
+import { Link } from "react-router-dom"
 import { colorOptions } from "../helper-fns/dictionaries"
+import DayFill from "./DayFill"
 
 const DayContentful = ({
   day,
@@ -12,10 +13,13 @@ const DayContentful = ({
 }) => {
   const percent = (count) => count / totalReports
   const buildFills = (reports) => {
-    const separatorHeight = 2
+    const symbolCount = Object.values(reports).filter((count) => count > 0)
+      .length
+    const separatorHeight = symbolCount === 1 ? 0 : 10 / symbolCount
     let y = 0
 
-    const remainingSpace = 100 - separatorHeight
+    const remainingSpace = 100 - separatorHeight * (symbolCount - 1)
+
     const normalizedHeight = (nativePercent) => nativePercent * remainingSpace
 
     return Object.entries(reports)
@@ -28,12 +32,16 @@ const DayContentful = ({
         const thisY = y
         y += height + separatorHeight
         return (
-          <DayFill
-            y={thisY}
+          <Link
+            to={`/calendar/${year}/${month}/${day}`}
             key={year + month + day + symbol}
-            color={colorOptions[i]}
-            {...{ height }}
-          />
+          >
+            <DayFill
+              y={thisY}
+              color={colorOptions[symbols.indexOf(symbol)]}
+              {...{ height }}
+            />
+          </Link>
         )
       })
   }
