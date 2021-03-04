@@ -23,7 +23,6 @@ const Calendar = () => {
             year={monthBefore.year}
             key={monthBefore.month + monthBefore.year}
             symbols={selectedBoard.details.symbols}
-            {...{ triggerOverlay }}
           />,
           ...buildMonths(getMonthBefore({ date: monthBefore.date })),
         ]
@@ -39,10 +38,7 @@ const Calendar = () => {
         }
       />
       <div id="calendar-scroll">
-        <ThisMonth
-          symbols={selectedBoard.details.symbols}
-          {...{ triggerOverlay }}
-        />
+        <ThisMonth symbols={selectedBoard.details.symbols} />
         {buildMonths(getMonthBefore({ date: new Date(todayDateString) }))}
       </div>
     </View>

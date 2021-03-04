@@ -59,7 +59,7 @@ export const SignUp = () => {
   }
 
   return (
-    <View pageTitle="Sign Up">
+    <View pageTitle="Sign up">
       <form onSubmit={handleSubmit(handleUserCreate, handleFail)}>
         <input
           name="email"
@@ -116,7 +116,6 @@ export const Login = () => {
 
   return (
     <View pageTitle="Sign in">
-      <h1>Sign in</h1>
       <form onSubmit={handleSubmit(handleSignIn, handleFail)}>
         <input
           name="email"
