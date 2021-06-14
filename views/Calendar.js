@@ -2,7 +2,6 @@ import Legend from "../components/Legend"
 import { Month, ThisMonth } from "../components/Month"
 import { useSelectedBoard } from "../context/SelectedBoardContextProvider"
 import { useToday } from "../context/TodayContextProvider"
-import { colorOptions } from "../helper-fns/dictionaries"
 import {
   getMonthBefore,
   isEndOfMonthBeforeCreatedAt,
@@ -10,11 +9,14 @@ import {
 import View from "./View"
 
 const Calendar = () => {
-  const { selectedBoard } = useSelectedBoard()
+  const {
+    selectedBoard: {
+      details: { title, emojiList, colorDict, createdAt, binary },
+    },
+  } = useSelectedBoard()
   const { todayDateString } = useToday()
 
   const buildMonths = (monthBefore) => {
-    const { createdAt } = selectedBoard.details
     return isEndOfMonthBeforeCreatedAt({ date: monthBefore.date, createdAt })
       ? []
       : [
@@ -22,23 +24,17 @@ const Calendar = () => {
             month={monthBefore.month}
             year={monthBefore.year}
             key={monthBefore.month + monthBefore.year}
-            symbols={selectedBoard.details.symbols}
+            {...{ emojiList, colorDict, binary }}
           />,
           ...buildMonths(getMonthBefore({ date: monthBefore.date })),
         ]
   }
 
   return (
-    <View pageTitle={selectedBoard.details.title} id="Calendar">
-      <Legend
-        symbols={selectedBoard.details.symbols}
-        colors={
-          selectedBoard.details.colors ||
-          colorOptions.slice(0, selectedBoard.details.symbols.length)
-        }
-      />
+    <View pageTitle={title} id="Calendar">
+      <Legend {...{ emojiList, colorDict }} />
       <div id="calendar-scroll">
-        <ThisMonth symbols={selectedBoard.details.symbols} />
+        <ThisMonth {...{ emojiList, colorDict, binary }} />
         {buildMonths(getMonthBefore({ date: new Date(todayDateString) }))}
       </div>
     </View>

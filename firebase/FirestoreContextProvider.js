@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react"
+import { colorOptions } from "../helper-fns/dictionaries"
 import { useAuth } from "./AuthContextProvider"
 import { db, FieldValue } from "./firebaseClient"
 
@@ -16,7 +17,7 @@ const FirestorePath = (pathString) => ({
 })
 
 const populateEmulator = (user) => async () => {
-  const randomNumber = () => Math.round(Math.random() * 5)
+  const randomNumber = () => Math.round(Math.random() * 3)
 
   const firstBoard = await FirestorePath(`users`)
     .append(user.uid)
@@ -25,7 +26,11 @@ const populateEmulator = (user) => async () => {
     .add({
       createdAt: new Date("January 1, 2021 09:00:00"),
       title: `Mood`,
-      symbols: [`😔`, `😘`],
+      symbols: [
+        { emoji: `😔`, color: colorOptions[0] },
+        { emoji: `😘`, color: colorOptions[1] },
+      ],
+      binary: false,
     })
     .then((createdDoc) => createdDoc.id)
   await FirestorePath(`users`)
@@ -74,6 +79,22 @@ const populateEmulator = (user) => async () => {
       )
   }
 
+  // for (let i = 1; i <= 27; i++) {
+  //   if (Math.random() > 0.3)
+  //     docs.push(
+  //       firstBoardStub
+  //         .append(`2021`)
+  //         .append(`03`)
+  //         .append(String(i).padStart(2, `0`))
+  //         .close()
+  //         .set({
+  //           createdAt: new Date(`March ${i}, 2021 9:00:00`),
+  //           "😔": randomNumber(),
+  //           "😘": randomNumber(),
+  //         })
+  //     )
+  // }
+
   const secondBoard = await FirestorePath(`users`)
     .append(user.uid)
     .append(`boards`)
@@ -81,7 +102,8 @@ const populateEmulator = (user) => async () => {
     .add({
       createdAt: new Date("January 1, 2021 09:00:00"),
       title: `Ecks dee`,
-      symbols: [`🚶‍♀️`],
+      symbols: [{ emoji: `🚶‍♀️`, color: colorOptions[0] }],
+      binary: true,
     })
     .then((createdDoc) => createdDoc.id)
 
@@ -116,6 +138,21 @@ const populateEmulator = (user) => async () => {
           .close()
           .set({
             createdAt: new Date(`February ${i}, 2021 9:01:00`),
+            "🚶‍♀️": 1,
+          })
+      )
+  }
+
+  for (let i = 1; i <= 27; i++) {
+    if (Math.random() > 0.2)
+      docs.push(
+        secondBoardStub
+          .append(`2021`)
+          .append(`03`)
+          .append(String(i).padStart(2, `0`))
+          .close()
+          .set({
+            createdAt: new Date(`March ${i}, 2021 9:01:00`),
             "🚶‍♀️": 1,
           })
       )

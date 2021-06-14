@@ -14,7 +14,7 @@ export const TodayContextProvider = ({ children }) => {
 
   const todayDocumentStub =
     userDocumentStub &&
-    selectedBoard &&
+    selectedBoard?.id &&
     todayDateString &&
     userDocumentStub
       .append(`boards`)

@@ -3,12 +3,14 @@ import { Route, Switch } from "react-router-dom"
 import { NavBar } from "../components/Navigation"
 import AppContextProvider from "../context/AppContextProvider"
 import { useSelectedBoard } from "../context/SelectedBoardContextProvider"
-import PopulateBoard from "../dev/PopulateBoard"
 import { useAuth } from "../firebase/AuthContextProvider"
 // import { firebaseAdmin } from "../firebase/firebaseAdmin"
 import Calendar from "../views/Calendar"
+import CalendarEmpty from "../views/CalendarEmpty"
+import Loading from "../views/Loading"
 import Settings from "../views/Settings"
 import Vote from "../views/Vote"
+import VoteEmpty from "../views/VoteEmpty"
 
 export default function Home({ onboarded }) {
   return (
@@ -25,23 +27,33 @@ const App = ({ onboarded }) => {
   return (
     <div className="App">
       {user && selectedBoard ? (
-        <Switch>
-          <Route path="/settings">
-            <Settings />
-          </Route>
-          <Route path="/calendar">
-            <Calendar />
-          </Route>
-
-          <Route path="/cheat">
-            <PopulateBoard />
-          </Route>
-          <Route path="/">
-            <Vote />
-          </Route>
-        </Switch>
+        selectedBoard.id ? (
+          <Switch>
+            <Route path="/settings">
+              <Settings />
+            </Route>
+            <Route path="/calendar">
+              <Calendar />
+            </Route>
+            <Route path="/">
+              <Vote />
+            </Route>
+          </Switch>
+        ) : (
+          <Switch>
+            <Route path="/settings">
+              <Settings />
+            </Route>
+            <Route path="/calendar">
+              <CalendarEmpty />
+            </Route>
+            <Route path="/">
+              <VoteEmpty />
+            </Route>
+          </Switch>
+        )
       ) : (
-        <div>...</div>
+        <Loading />
       )}
       <NavBar />
     </div>

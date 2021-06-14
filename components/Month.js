@@ -1,10 +1,11 @@
 import { Link, Redirect, Route, useLocation } from "react-router-dom"
 import { useSelectedBoard } from "../context/SelectedBoardContextProvider"
 import { useToday } from "../context/TodayContextProvider"
-import { useTodayDateString } from "../context/TodayDateStringContextProvider"
 import { monthDict } from "../helper-fns/dictionaries"
 import { useMonth } from "../hooks/useMonth"
+import DayOverlayReceiver from "./DayOverlay"
 import DayReceiver from "./DayReceiver"
+import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
 
 export const Month = ({
   year,
@@ -12,7 +13,9 @@ export const Month = ({
   thisMonth,
   todayData,
   todayDateString,
-  symbols,
+  emojiList,
+  colorDict,
+  binary,
 }) => {
   const { monthData } = useMonth(year, month, thisMonth)
 
@@ -26,36 +29,40 @@ export const Month = ({
       <div className="month">
         <h3>
           {monthDict[month]}
-          {!thisYear && ` ${year}`}
+          {!thisYear && ` `}
         </h3>
         <div className="month-grid">
           {monthData.renderElements.map(({ date, data }, i) => (
             <DayReceiver
               day={date.slice(8)}
-              {...{ year, month, symbols }}
+              {...{ year, month, emojiList, colorDict, binary }}
               data={data}
               startOfMonth={i === 0 && startDay}
               key={date}
+              calendar={true}
             />
           ))}
           {todayData && (
             <DayReceiver
               day={todayDateString.slice(8)}
-              {...{ year, month, symbols }}
+              {...{ year, month, emojiList, colorDict, binary }}
               data={todayData}
               startOfMonth={monthData.length === 0 && startDay}
+              calendar={true}
             />
           )}
         </div>
-        <Route path={`/calendar/${year}/${month}/:day`}>
-          <DayOverlayReceiver monthDict={monthData.dict} />
-        </Route>
+        <AnimatePresence>
+          <Route path={`/calendar/${year}/${month}/:day`}>
+            <DayOverlayReceiver monthDict={monthData.dict} />
+          </Route>
+        </AnimatePresence>
       </div>
     )
   )
 }
 
-export const ThisMonth = ({ symbols }) => {
+export const ThisMonth = ({ emojiList, colorDict, binary }) => {
   const { todayData, todayDateString } = useToday()
   const year = todayDateString.slice(0, 4)
   const month = todayDateString.slice(5, 7)
@@ -65,62 +72,7 @@ export const ThisMonth = ({ symbols }) => {
       year={year}
       month={month}
       thisMonth
-      {...{ todayData, todayDateString, symbols }}
+      {...{ todayData, todayDateString, emojiList, colorDict, binary }}
     />
-  )
-}
-
-const DayOverlayReceiver = ({ monthDict }) => {
-  const { todayDateString } = useTodayDateString()
-  const { pathname } = useLocation()
-  const {
-    selectedBoard: {
-      details: { symbols },
-    },
-  } = useSelectedBoard()
-
-  const dateString = pathname.replace(`/calendar/`, ``)
-
-  const isToday = todayDateString === dateString
-
-  return isToday ? (
-    <TodayOverlayReceiver {...{ symbols, dateString }} />
-  ) : monthDict.get(dateString) ? (
-    <DayOverlay
-      {...{ symbols, dateString }}
-      reports={monthDict.get(dateString)}
-    />
-  ) : (
-    <Redirect to="/calendar" />
-  )
-}
-
-const TodayOverlayReceiver = ({ symbols, dateString }) => {
-  const { todayData } = useToday()
-  return (
-    <DayOverlay
-      {...{ symbols, dateString }}
-      reports={
-        todayData &&
-        (({ createdAt, ...props }) =>
-          Object.keys(props).length
-            ? {
-                ...props,
-              }
-            : null)(todayData)
-      }
-    />
-  )
-}
-
-const DayOverlay = ({ symbols, dateString, reports }) => {
-  console.log(reports, dateString)
-  return (
-    <div className="day-overlay">
-      <Link to="/calendar">Dismiss</Link>
-      {symbols.map((s) => (
-        <div key={s}>{s}</div>
-      ))}
-    </div>
   )
 }

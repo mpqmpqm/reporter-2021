@@ -1,22 +1,15 @@
-import { useBoardSettings } from "../hooks/useBoardSettings"
+import { Route } from "react-router"
+import { Link } from "react-router-dom"
+import BoardList from "../components/BoardList"
+import CreateBoardModal from "../components/CreateBoardModal"
+import EditBoardModalOverlay from "../components/EditBoardModal"
+import { useBoardSettings } from "../context/BoardSettingsContextProvider"
 import { useSelectedBoard } from "../context/SelectedBoardContextProvider"
 import { firebase } from "../firebase/firebaseClient"
 import View from "./View"
-import Edit from "../components/Edit"
 
 const Settings = () => {
   const { updateBoardSelection, availableBoards, addBoard } = useBoardSettings()
-
-  const handleAddBoard = () => {
-    const title = window.prompt(`name for your board?`)
-    const symbols = window.prompt(`emoji to track?`)
-    title &&
-      symbols &&
-      addBoard({
-        title,
-        symbols: symbols.replace(/ /g, ``).split(`,`),
-      })
-  }
 
   const { selectedBoard } = useSelectedBoard()
 
@@ -27,41 +20,48 @@ const Settings = () => {
 
   return (
     <View pageTitle="Settings" id="Settings">
-      <div className="board-selector">
-        <header>
-          <h3>Your boards</h3>
-          <Edit />
-        </header>
-        {availableBoards.map(({ id, title, symbols }) => (
-          <div
-            key={id}
-            className={`board-option ${
-              id === selectedBoard.id ? `selected` : ``
-            }`}
-          >
-            <input
-              type="radio"
-              id={id}
-              value={id}
-              checked={id === selectedBoard.id}
-              onChange={({ target: { value } }) => updateBoardSelection(value)}
-            />
-            <label htmlFor={id}>
-              <span className="title">{title}</span>
-              <span className="symbols">{symbols}</span>
-            </label>
+      <div>
+        <div className="board-selector">
+          <header>
+            <h3>Your boards</h3>
+          </header>
+          {availableBoards.length ? (
+            <>
+              <p
+                style={{
+                  margin: `8px 16px 0`,
+                  fontSize: `1em`,
+                  color: `#666`,
+                  fontStyle: `italic`,
+                  lineHeight: 1,
+                }}
+              >
+                Swipe left to edit
+              </p>
+              <BoardList
+                {...{ availableBoards }}
+                handleSelect={({ target: { value } }) =>
+                  updateBoardSelection(value)
+                }
+                selectedBoardId={selectedBoard.id}
+              />
+            </>
+          ) : null}
+          <div className="board-option add">
+            <Link to="/settings/add">+ Add a board</Link>
           </div>
-        ))}
-        <div className="board-option">
-          <button id="add-board" onClick={handleAddBoard}>
-            + Add a board
+        </div>
+        <div>
+          <button id="sign-out" onClick={signOut}>
+            Sign out
           </button>
         </div>
-      </div>
-      <div>
-        <button id="sign-out" onClick={signOut}>
-          Sign out
-        </button>
+        <Route path="/settings/add/">
+          <CreateBoardModal />
+        </Route>
+        <Route path="/settings/edit/:boardId">
+          <EditBoardModalOverlay />
+        </Route>
       </div>
     </View>
   )

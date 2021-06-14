@@ -2,30 +2,31 @@ import { Link, useLocation } from "react-router-dom"
 
 export const NavBar = (props) => {
   const { pathname } = useLocation()
-  const active = ``
+
+  const base = pathname.match(/\/.*?(?=($|\/))/)[0]
   return (
     <nav className="nav-bar">
       <Icon
         to="/settings"
         title="Settings"
         Component={Settings}
-        {...{ pathname }}
+        {...{ base }}
       />
-      <Icon to="/" title="Home" Component={Sparkles} {...{ pathname }} />
+      <Icon to="/" title="Home" Component={Sparkles} {...{ base }} />
       <Icon
         to="/calendar"
         title="Calendar"
         Component={Calendar}
-        {...{ pathname }}
+        {...{ base }}
       />
     </nav>
   )
 }
 
-const Icon = ({ to, title, Component, pathname }) => (
+const Icon = ({ to, title, Component, base }) => (
   <div className="icon-link">
     <Link {...{ to, title }}>
-      <Component active={to === pathname} />
+      <Component active={to === base} />
     </Link>
   </div>
 )
