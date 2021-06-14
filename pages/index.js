@@ -1,3 +1,4 @@
+import Head from "next/head"
 import nookies from "nookies"
 import { Route, Switch } from "react-router-dom"
 import { NavBar } from "../components/Navigation"
@@ -26,38 +27,51 @@ const App = ({ onboarded }) => {
   const { selectedBoard } = useSelectedBoard()
 
   return (
-    <div className="App">
-      {user && selectedBoard ? (
-        selectedBoard.id ? (
-          <Switch>
-            <Route path="/settings">
-              <Settings />
-            </Route>
-            <Route path="/calendar">
-              <Calendar />
-            </Route>
-            <Route path="/">
-              <Vote />
-            </Route>
-          </Switch>
+    <>
+      <Head>
+        <meta name="description" content="Reporter" />
+        <link
+          rel="icon"
+          href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>😘</text></svg>"
+        />
+        <meta
+          name="og:image"
+          content="https://reporter-2021.vercel.app/reporter-meta.jpg"
+        />
+      </Head>
+      <div className="App">
+        {user && selectedBoard ? (
+          selectedBoard.id ? (
+            <Switch>
+              <Route path="/settings">
+                <Settings />
+              </Route>
+              <Route path="/calendar">
+                <Calendar />
+              </Route>
+              <Route path="/">
+                <Vote />
+              </Route>
+            </Switch>
+          ) : (
+            <Switch>
+              <Route path="/settings">
+                <Settings />
+              </Route>
+              <Route path="/calendar">
+                <CalendarEmpty />
+              </Route>
+              <Route path="/">
+                <VoteEmpty />
+              </Route>
+            </Switch>
+          )
         ) : (
-          <Switch>
-            <Route path="/settings">
-              <Settings />
-            </Route>
-            <Route path="/calendar">
-              <CalendarEmpty />
-            </Route>
-            <Route path="/">
-              <VoteEmpty />
-            </Route>
-          </Switch>
-        )
-      ) : (
-        <Loading />
-      )}
-      <NavBar />
-    </div>
+          <Loading />
+        )}
+        <NavBar />
+      </div>
+    </>
   )
 }
 
