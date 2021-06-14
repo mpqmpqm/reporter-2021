@@ -1,5 +1,4 @@
 import nookies from "nookies"
-import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { firebase } from "../firebase/firebaseClient"
 import View from "./View"
@@ -35,9 +34,9 @@ const emailPattern = new RegExp(
 //   )
 // })
 
-export const SignUp = () => {
+export const SignUp = ({ children }) => {
   const { register, handleSubmit, errors } = useForm()
-  const [showPassword, setShowPassword] = useState(false)
+  // const [showPassword, setShowPassword] = useState(false)
 
   const handleUserCreate = async ({ email, password }) => {
     try {
@@ -59,37 +58,48 @@ export const SignUp = () => {
   }
 
   return (
-    <View pageTitle="Sign up">
-      <form onSubmit={handleSubmit(handleUserCreate, handleFail)}>
-        <input
-          name="email"
-          placeholder="Email"
-          ref={register({
-            required: {
-              value: true,
-              message: `Email address required.`,
-            },
-            pattern: {
-              value: emailPattern,
-              message: `Please enter a valid email address.`,
-            },
-          })}
-        />
-        <input
-          name="password"
-          placeholder="Password"
-          type="password"
-          ref={register({
-            required: { value: true, message: `Password required.` },
-          })}
-        />
-        <button type="submit">Sign up</button>
-      </form>
+    <View pageTitle="Sign up" id="signUp" className="authForm">
+      <div>
+        <form onSubmit={handleSubmit(handleUserCreate, handleFail)}>
+          <div>
+            <label htmlFor="email">Email</label>
+            <input
+              name="email"
+              id="email"
+              ref={register({
+                required: {
+                  value: true,
+                  message: `Email address required.`,
+                },
+                pattern: {
+                  value: emailPattern,
+                  message: `Please enter a valid email address.`,
+                },
+              })}
+            />
+          </div>
+          <div>
+            <label htmlFor="pass">Password</label>
+            <input
+              name="password"
+              type="password"
+              id="pass"
+              ref={register({
+                required: { value: true, message: `Password required.` },
+              })}
+            />
+          </div>
+          <div>
+            <button type="submit">Sign up &rarr;</button>
+          </div>
+        </form>
+        {children}
+      </div>
     </View>
   )
 }
 
-export const Login = () => {
+export const Login = ({ children }) => {
   const { register, handleSubmit } = useForm()
 
   const handleSignIn = async ({ email, password }, e) => {
@@ -115,32 +125,43 @@ export const Login = () => {
   }
 
   return (
-    <View pageTitle="Sign in">
-      <form onSubmit={handleSubmit(handleSignIn, handleFail)}>
-        <input
-          name="email"
-          placeholder="Email"
-          ref={register({
-            required: {
-              value: true,
-              message: `Email address required.`,
-            },
-            pattern: {
-              value: emailPattern,
-              message: `Please enter a valid email address.`,
-            },
-          })}
-        />
-        <input
-          name="password"
-          placeholder="Password"
-          type="password"
-          ref={register({
-            required: { value: true, message: `Password required.` },
-          })}
-        />
-        <button type="submit">Sign in</button>
-      </form>
+    <View pageTitle="Sign in" id="signIn" className="authForm">
+      <div>
+        <form onSubmit={handleSubmit(handleSignIn, handleFail)}>
+          <div>
+            <label htmlFor="email">Email</label>
+            <input
+              name="email"
+              id="email"
+              ref={register({
+                required: {
+                  value: true,
+                  message: `Email address required.`,
+                },
+                pattern: {
+                  value: emailPattern,
+                  message: `Please enter a valid email address.`,
+                },
+              })}
+            />
+          </div>
+          <div>
+            <label htmlFor="pass">Password</label>
+            <input
+              id="pass"
+              name="password"
+              type="password"
+              ref={register({
+                required: { value: true, message: `Password required.` },
+              })}
+            />
+          </div>
+          <div>
+            <button type="submit">Sign in &rarr;</button>
+          </div>
+        </form>
+        {children}
+      </div>
     </View>
   )
 }

@@ -231,10 +231,6 @@ div.board-selector h3 {
   padding-right: var(--padding-sides);
 }
 
-.board-option label span.symbols {
-  /* font-size: 1.4em; */
-}
-
 .board-option .icon-container {
   background-color: rgb(255, 135, 0);
   /* transition: transform 0.8s;
@@ -261,9 +257,6 @@ div.board-selector h3 {
 
 .board-option.add:first-child {
   margin-top: 0;
-}
-
-.board-option.static {
 }
 
 .board-option.editing label {
@@ -406,6 +399,8 @@ div.board-select {
 #Vote .button-array button {
   font-size: 20vw;
   -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
 }
 
 #Vote .today-vote-graph {
@@ -897,4 +892,61 @@ h4.day-overlay-date {
 
 .confirmation-options button[name="confirm"] {
   border-bottom: 4px solid var(--nav-color);
+}
+
+.authForm > *:nth-child(2) {
+  width: 90%;
+  margin: 4vh auto;
+}
+
+.authForm form > div {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2vh;
+  font-size: 1.1rem;
+}
+
+.authForm form label {
+  margin-bottom: 2px;
+  color: #666;
+}
+
+.authForm form input {
+  background: none;
+  border: none;
+  border-radius: 0;
+  border-bottom: 1px solid #666;
+  font-size: 1.1em;
+  color: whitesmoke;
+  font-family: inherit;
+  padding: 2px;
+}
+
+.authForm button {
+  font-size: 1.3em;
+  color: var(--nav-color);
+}
+
+.authForm button[type="submit"] {
+  font-size: 1.5em;
+  font-weight: 600;
+  color: var(--nav-color);
+  justify-self: flex-start;
+  align-self: flex-end;
+  margin-top: 2vh;
+}
+
+.authForm .switch {
+  text-align: center;
+  margin: 0 auto;
+  margin-top: 15vh;
+  border: 0.5px solid #666;
+  padding: 16px;
+  width: fit-content;
+  border-radius: 6px;
+}
+
+.authForm .switch p {
+  font-size: 1.1em;
+  margin-bottom: 4px;
 }

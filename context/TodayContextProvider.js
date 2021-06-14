@@ -36,8 +36,8 @@ export const TodayContextProvider = ({ children }) => {
             if (!doc.exists) {
               await todayDocumentStub.close().set({
                 createdAt: FieldValue.serverTimestamp(),
-                ...symbols.reduce((object, symbol) => {
-                  object[symbol] = 0
+                ...symbols.reduce((object, { emoji }) => {
+                  object[emoji] = 0
                   return object
                 }, {}),
               })

@@ -12,13 +12,21 @@ const login = () => {
 
   return isLoginFlow ? (
     <div>
-      <Login />
-      <button onClick={handleSwitch}>Sign up &rarr;</button>
+      <Login>
+        <div className="switch">
+          <p>New to Reporter?</p>
+          <button onClick={handleSwitch}>Sign up</button>
+        </div>
+      </Login>
     </div>
   ) : (
     <div>
-      <SignUp />
-      <button onClick={handleSwitch}>Sign in &rarr;</button>
+      <SignUp>
+        <div className="switch">
+          <p>Returning?</p>
+          <button onClick={handleSwitch}>Sign in</button>
+        </div>
+      </SignUp>
     </div>
   )
 }
