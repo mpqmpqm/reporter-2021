@@ -28,21 +28,6 @@ const App = ({ onboarded, hostname }) => {
 
   return (
     <>
-      <Head>
-        <meta name="description" content="Reporter" />
-        <link
-          rel="icon"
-          href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>😘</text></svg>"
-        />
-        <meta
-          name="og:image"
-          content={`https://${hostname}/reporter-meta.jpg`}
-        />
-        <meta name="og:description" content="Reporter" />
-        <meta name="og:site_name" content="Reporter" />
-        <meta name="twitter:card" content="summary_large_image"></meta>
-        <meta name="og:url" content={`https://${hostname}`} />
-      </Head>
       <div className="App">
         {user && selectedBoard ? (
           selectedBoard.id ? (
@@ -88,7 +73,7 @@ export const getServerSideProps = async (ctx) => {
     token = await firebaseAdmin.auth().verifyIdToken(cookies.token)
   } catch (err) {
     console.error(err)
-    return { redirect: { destination: `/login`, permanent: true } }
+    return { redirect: { destination: `/login`, permanent: false } }
   }
   try {
     if (cookies.firestoreNotInitialized) {
@@ -123,6 +108,6 @@ export const getServerSideProps = async (ctx) => {
     return { props: { onboarded: cookies.onboarded || true, hostname } }
   } catch (err) {
     console.error(err)
-    return { redirect: { destination: `/failed-onboarding`, permanent: true } }
+    return { redirect: { destination: `/failed-onboarding`, permanent: false } }
   }
 }
