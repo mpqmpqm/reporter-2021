@@ -88,7 +88,7 @@ export const getServerSideProps = async (ctx) => {
     token = await firebaseAdmin.auth().verifyIdToken(cookies.token)
   } catch (err) {
     console.error(err)
-    return { redirect: { destination: `/login`, permanent: false } }
+    return { redirect: { destination: `/login`, permanent: true } }
   }
   try {
     if (cookies.firestoreNotInitialized) {
@@ -123,6 +123,6 @@ export const getServerSideProps = async (ctx) => {
     return { props: { onboarded: cookies.onboarded || true, hostname } }
   } catch (err) {
     console.error(err)
-    return { redirect: { destination: `/failed-onboarding`, permanent: false } }
+    return { redirect: { destination: `/failed-onboarding`, permanent: true } }
   }
 }

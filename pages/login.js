@@ -60,7 +60,7 @@ export const getServerSideProps = async (ctx) => {
   try {
     const cookies = nookies.get(ctx)
     const token = await firebaseAdmin.auth().verifyIdToken(cookies.token)
-    return { redirect: { destination: `/`, permanent: false } }
+    return { redirect: { destination: `/`, permanent: true } }
   } catch (err) {
     console.error(err)
     return { props: { hostname } }
