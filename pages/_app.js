@@ -14,13 +14,33 @@ function MyApp({ Component, pageProps }) {
         />
         <meta
           name="og:image"
-          content={`https://${pageProps.hostname}/reporter-meta.jpg`}
+          content={`https://${pageProps.hostname}/static/reporter-meta.jpg`}
         />
         <meta name="og:description" content="A protean quantified self app" />
         <meta name="og:site_name" content="Reporter" />
         <meta name="twitter:card" content="summary_large_image"></meta>
         <meta name="og:url" content={`https://${pageProps.hostname}`} />
         <meta name="og:title" content="Reporter" />
+        <link
+          rel="apple-touch-icon"
+          sizes="57x57"
+          href={`https://${pageProps.hostname}/static/apple-icon-57x57px.png"`}
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="72x72"
+          href={`https://${pageProps.hostname}/static/apple-icon-72x72px.png"`}
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="114x114"
+          href={`https://${pageProps.hostname}/static/apple-icon-114x114px.png"`}
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="144x144"
+          href={`https://${pageProps.hostname}/static/apple-icon-144x144px.png"`}
+        />
       </Head>
       <div suppressHydrationWarning id="__app">
         {typeof window === `undefined` ? null : (
