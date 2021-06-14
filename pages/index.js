@@ -38,6 +38,10 @@ const App = ({ onboarded, hostname }) => {
           name="og:image"
           content={`https://${hostname}/reporter-meta.jpg`}
         />
+        <meta name="og:description" content="Reporter" />
+        <meta name="og:site_name" content="Reporter" />
+        <meta name="twitter:card" content="summary_large_image"></meta>
+        <meta name="og:url" content={`https://${hostname}`} />
       </Head>
       <div className="App">
         {user && selectedBoard ? (
