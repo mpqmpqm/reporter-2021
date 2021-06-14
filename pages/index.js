@@ -14,15 +14,15 @@ import Settings from "../views/Settings"
 import Vote from "../views/Vote"
 import VoteEmpty from "../views/VoteEmpty"
 
-export default function Home({ onboarded }) {
+export default function Home({ onboarded, hostname }) {
   return (
     <AppContextProvider>
-      <App {...{ onboarded }} />
+      <App {...{ onboarded, hostname }} />
     </AppContextProvider>
   )
 }
 
-const App = ({ onboarded }) => {
+const App = ({ onboarded, hostname }) => {
   const { user } = useAuth()
   const { selectedBoard } = useSelectedBoard()
 
@@ -34,10 +34,7 @@ const App = ({ onboarded }) => {
           rel="icon"
           href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>😘</text></svg>"
         />
-        <meta
-          name="og:image"
-          content="https://reporter-2021.vercel.app/reporter-meta.jpg"
-        />
+        <meta name="og:image" content={`${hostname}/reporter-meta.jpg`} />
       </Head>
       <div className="App">
         {user && selectedBoard ? (
@@ -76,6 +73,7 @@ const App = ({ onboarded }) => {
 }
 
 export const getServerSideProps = async (ctx) => {
+  const hostname = ctx.req.headers.host
   let cookies
   let token
   try {
@@ -117,7 +115,7 @@ export const getServerSideProps = async (ctx) => {
 
       nookies.destroy(ctx, `firestoreNotInitialized`)
     }
-    return { props: { onboarded: cookies.onboarded || true } }
+    return { props: { onboarded: cookies.onboarded || true, hostname } }
   } catch (err) {
     console.error(err)
     ctx.res.writeHead(302, { Location: `/failed-onboarding` })

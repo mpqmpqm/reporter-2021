@@ -4,7 +4,7 @@ import { firebaseAdmin } from "../firebase/firebaseAdmin"
 import { Login, SignUp } from "../views/Login"
 import Head from "next/head"
 
-const login = () => {
+const login = ({ hostname }) => {
   const [isLoginFlow, setIsLoginFlow] = useState(true)
 
   const handleSwitch = () => {
@@ -20,10 +20,7 @@ const login = () => {
           rel="icon"
           href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>😘</text></svg>"
         />
-        <meta
-          name="og:image"
-          content="https://reporter-2021.vercel.app/reporter-meta.jpg"
-        />
+        <meta name="og:image" content={`${hostname}/reporter-meta.jpg`} />
       </Head>
       <div>
         {isLoginFlow ? (
@@ -49,6 +46,7 @@ const login = () => {
 export default login
 
 export const getServerSideProps = async (ctx) => {
+  const hostname = ctx.req.headers.host
   try {
     const cookies = nookies.get(ctx)
     const token = await firebaseAdmin.auth().verifyIdToken(cookies.token)
@@ -57,6 +55,6 @@ export const getServerSideProps = async (ctx) => {
     return { props: {} }
   } catch (err) {
     console.error(err)
-    return { props: {} }
+    return { props: { hostname } }
   }
 }
