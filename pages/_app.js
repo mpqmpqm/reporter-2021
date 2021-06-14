@@ -24,22 +24,22 @@ function MyApp({ Component, pageProps }) {
         <link
           rel="apple-touch-icon"
           sizes="57x57"
-          href={`https://${pageProps.hostname}/static/apple-icon-57x57px.png"`}
+          href={`https://${pageProps.hostname}/static/apple-icon-57x57px.png`}
         />
         <link
           rel="apple-touch-icon"
           sizes="72x72"
-          href={`https://${pageProps.hostname}/static/apple-icon-72x72px.png"`}
+          href={`https://${pageProps.hostname}/static/apple-icon-72x72px.png`}
         />
         <link
           rel="apple-touch-icon"
           sizes="114x114"
-          href={`https://${pageProps.hostname}/static/apple-icon-114x114px.png"`}
+          href={`https://${pageProps.hostname}/static/apple-icon-114x114px.png`}
         />
         <link
           rel="apple-touch-icon"
           sizes="144x144"
-          href={`https://${pageProps.hostname}/static/apple-icon-144x144px.png"`}
+          href={`https://${pageProps.hostname}/static/apple-icon-144x144px.png`}
         />
       </Head>
       <div suppressHydrationWarning id="__app">
