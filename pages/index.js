@@ -86,7 +86,7 @@ export const getServerSideProps = async (ctx) => {
           createdAt: firebaseAdmin.firestore.FieldValue.serverTimestamp(),
           title: `Mood`,
           symbols: [
-            { emoji: `😔`, color: colorOptions[0] },
+            { emoji: `🙃`, color: colorOptions[0] },
             { emoji: `😘`, color: colorOptions[1] },
           ],
           binary: false,
