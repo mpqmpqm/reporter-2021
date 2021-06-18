@@ -9,10 +9,13 @@ import { firebaseAdmin } from "../firebase/firebaseAdmin"
 import { colorOptions } from "../helper-fns/dictionaries"
 import Calendar from "../views/Calendar"
 import CalendarEmpty from "../views/CalendarEmpty"
+import DemoForm from "../views/DemoForm"
 import Loading from "../views/Loading"
 import Settings from "../views/Settings"
 import Vote from "../views/Vote"
 import VoteEmpty from "../views/VoteEmpty"
+
+const dev = process.env.NODE_ENV === `development`
 
 export default function Home({ onboarded, hostname }) {
   return (
@@ -22,7 +25,7 @@ export default function Home({ onboarded, hostname }) {
   )
 }
 
-const App = ({ onboarded, hostname }) => {
+const App = ({ onboarded }) => {
   const { user } = useAuth()
   const { selectedBoard } = useSelectedBoard()
 
@@ -38,6 +41,11 @@ const App = ({ onboarded, hostname }) => {
               <Route path="/calendar">
                 <Calendar />
               </Route>
+              {dev && (
+                <Route path="/demo">
+                  <DemoForm />
+                </Route>
+              )}
               <Route path="/">
                 <Vote />
               </Route>
