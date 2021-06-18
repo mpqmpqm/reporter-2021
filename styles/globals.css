@@ -928,6 +928,17 @@ h4.day-overlay-date {
   padding: 2px;
 }
 
+.authForm .form-error-container {
+  min-height: 1.5em;
+}
+
+.authForm .form-error {
+  margin-top: 0.5em;
+  color: #666;
+  font-size: 0.75em;
+  text-shadow: 0px 0px 2px rgb(189, 0, 0);
+}
+
 .authForm button {
   font-size: 1.3em;
   color: var(--nav-color);

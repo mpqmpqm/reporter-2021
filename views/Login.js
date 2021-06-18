@@ -2,6 +2,7 @@ import nookies from "nookies"
 import { useForm } from "react-hook-form"
 import { firebase } from "../firebase/firebaseClient"
 import View from "./View"
+import { ErrorMessage } from "@hookform/error-message"
 
 const emailPattern = new RegExp(
   /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
@@ -35,7 +36,12 @@ const emailPattern = new RegExp(
 // })
 
 export const SignUp = ({ children }) => {
-  const { register, handleSubmit, errors } = useForm()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm()
+
   // const [showPassword, setShowPassword] = useState(false)
 
   const handleUserCreate = async ({ email, password }) => {
@@ -50,9 +56,8 @@ export const SignUp = ({ children }) => {
   }
 
   const handleFail = (errors) => {
-    console.log(Object.entries(errors)[0])
-    const [target, { message, ref }] = Object.entries(errors)[0]
-    alert(message)
+    const [target, { ref }] = Object.entries(errors)[0]
+
     ref.focus()
     if (target === `password`) ref.select()
   }
@@ -66,6 +71,7 @@ export const SignUp = ({ children }) => {
             <input
               name="email"
               id="email"
+              type="email"
               ref={register({
                 required: {
                   value: true,
@@ -77,6 +83,9 @@ export const SignUp = ({ children }) => {
                 },
               })}
             />
+            <div className="form-error-container">
+              <FormErrorMessage {...{ errors, name: "email" }} />
+            </div>
           </div>
           <div>
             <label htmlFor="pass">Password</label>
@@ -88,6 +97,9 @@ export const SignUp = ({ children }) => {
                 required: { value: true, message: `Password required.` },
               })}
             />
+            <div className="form-error-container">
+              <FormErrorMessage {...{ errors, name: "password" }} />
+            </div>
           </div>
           <div>
             <button type="submit">Sign up &rarr;</button>
@@ -100,7 +112,11 @@ export const SignUp = ({ children }) => {
 }
 
 export const Login = ({ children }) => {
-  const { register, handleSubmit } = useForm()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm()
 
   const handleSignIn = async ({ email, password }, e) => {
     try {
@@ -117,9 +133,7 @@ export const Login = ({ children }) => {
   }
 
   const handleFail = (errors) => {
-    console.log(Object.entries(errors)[0])
-    const [target, { message, ref }] = Object.entries(errors)[0]
-    alert(message)
+    const [target, { ref }] = Object.entries(errors)[0]
     ref.focus()
     if (target === `password`) ref.select()
   }
@@ -131,6 +145,7 @@ export const Login = ({ children }) => {
           <div>
             <label htmlFor="email">Email</label>
             <input
+              type="email"
               name="email"
               id="email"
               ref={register({
@@ -144,6 +159,9 @@ export const Login = ({ children }) => {
                 },
               })}
             />
+            <div className="form-error-container">
+              <FormErrorMessage {...{ errors, name: "email" }} />
+            </div>
           </div>
           <div>
             <label htmlFor="pass">Password</label>
@@ -155,6 +173,9 @@ export const Login = ({ children }) => {
                 required: { value: true, message: `Password required.` },
               })}
             />
+            <div className="form-error-container">
+              <FormErrorMessage {...{ errors, name: "password" }} />
+            </div>
           </div>
           <div>
             <button type="submit">Sign in &rarr;</button>
@@ -165,3 +186,11 @@ export const Login = ({ children }) => {
     </View>
   )
 }
+
+const FormErrorMessage = ({ errors, name }) => (
+  <ErrorMessage
+    errors={errors}
+    name={name}
+    render={({ message }) => <p className="form-error">{message}</p>}
+  />
+)
