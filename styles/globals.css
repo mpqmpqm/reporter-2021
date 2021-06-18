@@ -68,6 +68,7 @@ div.App .View {
 .View h2 {
   text-align: right;
   word-break: break-word;
+  user-select: none;
 }
 
 .View h1 {
@@ -401,6 +402,11 @@ div.board-select {
   -webkit-user-select: none;
   user-select: none;
   touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+#Vote .button-array button:active {
+  background-color: none;
 }
 
 #Vote .today-vote-graph {
@@ -949,4 +955,13 @@ h4.day-overlay-date {
 .authForm .switch p {
   font-size: 1.1em;
   margin-bottom: 4px;
+}
+
+.sparkle {
+  position: absolute;
+  font-size: 10vw;
+  user-select: none;
+  pointer-events: none;
+  transition: transform 0.6s, opacity 1.5s;
+  z-index: 99;
 }

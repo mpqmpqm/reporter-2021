@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react"
 import DayReceiver from "../components/DayReceiver"
 import { useSelectedBoard } from "../context/SelectedBoardContextProvider"
 import { useToday } from "../context/TodayContextProvider"
+import { drawEmojiSparkles } from "../helper-fns/drawEmojiSparkles"
 import View from "./View"
 
 const Vote = () => {
@@ -16,8 +17,9 @@ const Vote = () => {
   const gridRef = useRef(null)
   const buttonRef = useRef(null)
 
-  const handleClick = ({ target: { value } }) => {
-    sendReport(value)
+  const handleClick = (e) => {
+    drawEmojiSparkles(e)
+    sendReport(e.target.value)
   }
 
   useEffect(() => {
