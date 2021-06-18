@@ -969,7 +969,7 @@ h4.day-overlay-date {
 }
 
 .sparkle {
-  position: absolute;
+  position: fixed;
   font-size: 10vw;
   user-select: none;
   pointer-events: none;
