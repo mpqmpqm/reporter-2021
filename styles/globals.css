@@ -407,6 +407,8 @@ div.board-select {
 
 #Vote .button-array button:active {
   background-color: none;
+  filter: contrast(75%);
+  filter: brightness(75%);
 }
 
 #Vote .today-vote-graph {
