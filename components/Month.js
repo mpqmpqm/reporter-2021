@@ -6,6 +6,27 @@ import { useMonth } from "../hooks/useMonth"
 import DayOverlayReceiver from "./DayOverlay"
 import DayReceiver from "./DayReceiver"
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion"
+import styled from "styled-components"
+
+const MonthContainer = styled.div`
+  margin-bottom: 1em;
+
+  &:last-child {
+    margin-bottom: 64px;
+  }
+
+  h3 {
+    font-size: 1.8rem;
+    margin-bottom: 6px;
+    text-align: right;
+  }
+`
+
+const MonthGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+`
 
 export const Month = ({
   year,
@@ -26,12 +47,12 @@ export const Month = ({
 
   return (
     monthData && (
-      <div className="month">
+      <MonthContainer>
         <h3>
           {monthDict[month]}
           {!thisYear && ` `}
         </h3>
-        <div className="month-grid">
+        <MonthGrid>
           {monthData.renderElements.map(({ date, data }, i) => (
             <DayReceiver
               day={date.slice(8)}
@@ -51,13 +72,13 @@ export const Month = ({
               calendar={true}
             />
           )}
-        </div>
+        </MonthGrid>
         <AnimatePresence>
           <Route path={`/calendar/${year}/${month}/:day`}>
             <DayOverlayReceiver monthDict={monthData.dict} />
           </Route>
         </AnimatePresence>
-      </div>
+      </MonthContainer>
     )
   )
 }

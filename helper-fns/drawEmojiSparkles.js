@@ -22,7 +22,7 @@ function draw(clientX, clientY, name) {
 
   el.style.top = `${clientY - 50}px`
   el.style.left = `${clientX - 30}px`
-  document.querySelector(`.View`).append(el)
+  document.body.append(el)
   animate(el)
 }
 

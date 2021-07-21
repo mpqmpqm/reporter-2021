@@ -1,9 +1,26 @@
-import { useEffect, useRef } from "react"
+import { useCallback, useEffect, useRef } from "react"
+import styled from "styled-components"
+import ButtonArray from "../components/ButtonArray"
 import DayReceiver from "../components/DayReceiver"
 import { useSelectedBoard } from "../context/SelectedBoardContextProvider"
 import { useToday } from "../context/TodayContextProvider"
 import { drawEmojiSparkles } from "../helper-fns/drawEmojiSparkles"
 import View from "./View"
+
+const Container = styled.div`
+  display: grid;
+  grid-template-areas: "all";
+  flex-grow: 1;
+
+  .button-array-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    grid-area: all;
+    z-index: 2;
+  }
+`
 
 const Vote = () => {
   const {
@@ -17,10 +34,10 @@ const Vote = () => {
   const gridRef = useRef(null)
   const buttonRef = useRef(null)
 
-  const handleClick = (e) => {
+  const handleClick = useCallback((e) => {
     drawEmojiSparkles(e)
     sendReport(e.target.value)
-  }
+  })
 
   useEffect(() => {
     const grid = gridRef.current
@@ -33,24 +50,17 @@ const Vote = () => {
 
   return (
     <View pageTitle={title} id="Vote">
-      <div className="absolute-grid" ref={gridRef}>
+      <Container ref={gridRef}>
         <div className="button-array-container" ref={buttonRef}>
-          <div className="button-array">
-            {emojiList.map((emoji, i) => (
-              <div className="button-container" key={emoji}>
-                <button onClick={handleClick} value={emoji}>
-                  {emoji}
-                </button>
-              </div>
-            ))}
-          </div>
+          <ButtonArray emojiList={emojiList} handleClick={handleClick} />
+          <div className="button-array"></div>
         </div>
         <DayReceiver
           ref={gridRef}
           data={todayData}
           {...{ emojiList, colorDict, binary }}
         />
-      </div>
+      </Container>
     </View>
   )
 }

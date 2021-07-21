@@ -1,16 +1,68 @@
+import styled from "styled-components"
+
+const Container = styled.div`
+  display: flex;
+  width: 100%;
+  padding: 8px 6px 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+
+  .symbol-color-pair {
+    border-right: 0.5px solid #666;
+    flex-basis: 18%;
+    flex-grow: 1;
+    max-width: 20%;
+
+    &:nth-child(5n) {
+      border-right: none;
+      padding-right: 0;
+    }
+
+    &:last-child {
+      border-right: none;
+    }
+
+    &:nth-child(n + 6) {
+      margin-top: 4px;
+
+      &:last-child {
+        margin-right: auto;
+      }
+    }
+  }
+`
+
+const SymbolColorPairParent = styled.div`
+  display: flex;
+  font-size: 28px;
+  align-items: center;
+  line-height: 1;
+  position: relative;
+  padding: 0 4px;
+
+  span {
+    margin-left: auto;
+  }
+
+  svg {
+    height: 34px;
+    width: 34px;
+  }
+`
+
 const Legend = ({ emojiList, colorDict }) => (
-  <div className="legend">
+  <Container>
     {emojiList.map((emoji, i) => (
       <SymbolColorPair key={emoji} {...{ emoji }} color={colorDict[emoji]} />
     ))}
-  </div>
+  </Container>
 )
 
 export const SymbolColorPair = ({ emoji, color }) => (
-  <div className="symbol-color-pair">
+  <SymbolColorPairParent className="symbol-color-pair">
     <span>{emoji}</span>
     <ConcentricCircles color={color} />
-  </div>
+  </SymbolColorPairParent>
 )
 
 export const ConcentricCircles = ({ color }) => (
