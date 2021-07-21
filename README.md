@@ -3,7 +3,7 @@
 [Visit production site](https://reporter.mpq.dev/)
 
 Reporter is a [quantified self](https://en.wikipedia.org/wiki/Quantified_self)
-app that lets users choose what to quantify.
+mobile web app that lets users choose what to quantify.
 
 Users select one or more emoji to associate with a particular board. Tapping on
 an emoji sends a report of that event to the Firestore database, and the app
