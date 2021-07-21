@@ -2,6 +2,8 @@
 
 [Visit production site](https://reporter.mpq.dev/)
 
+Demo credentials: `demo@mpq.dev:reporter`
+
 Reporter is a [quantified self](https://en.wikipedia.org/wiki/Quantified_self)
 mobile web app that lets users choose what to quantify.
 
