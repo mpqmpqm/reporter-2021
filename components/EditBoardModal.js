@@ -2,10 +2,97 @@ import isEqual from "lodash.isequal"
 import { forwardRef, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useHistory, useRouteMatch } from "react-router-dom"
+import styled from "styled-components"
 import { useBoardSettings } from "../context/BoardSettingsContextProvider"
 import { useSelectedBoard } from "../context/SelectedBoardContextProvider"
 import { useFirestore } from "../firebase/FirestoreContextProvider"
 import PageOverlay from "./ModalGenerics"
+
+const OverlayParent = styled.div`
+  header {
+    margin-bottom: 12px;
+
+    h4 {
+      display: flex;
+      justify-content: center;
+      alignitems: flex-end;
+      marginbottom: 2.5vh;
+      marginleft: 1ch;
+      text-align: center;
+      font-size: 1.3rem;
+      color: #666;
+      line-height: 1.2;
+    }
+  }
+
+  .edit-board-form {
+    fieldset {
+      padding: 6px 16px 16px;
+      margin-bottom: 12px;
+      border: 0.5px solid #666;
+      border-radius: 0 12px 12px 12px;
+
+      legend {
+        margin-left: -8px;
+        padding: 0 8px;
+      }
+    }
+
+    .emoji-color-pairs {
+      max-height: 20vh;
+      overflow-y: auto;
+
+      label {
+        margin-right: 8px;
+      }
+    }
+
+    .emoji-color-input-container {
+      --emoji-size: 26px;
+      --input-width: 32px;
+      display: flex;
+      align-items: center;
+      padding: 2px 0;
+      font-size: 16px;
+      margin-bottom: 1vh;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      div:first-child {
+        margin-right: 5vw;
+      }
+
+      > * {
+        display: flex;
+        align-items: center;
+        font-size: inherit;
+      }
+
+      .emoji {
+        font-size: var(--emoji-size);
+        margin-left: 8px;
+      }
+
+      input[name="formBinary"] {
+        margin-left: 6px;
+      }
+
+      button[type="submit"] {
+        font-size: 1.2rem;
+        font-family: inherit;
+        font-weight: 400;
+      }
+    }
+  }
+
+  button[name="delete"] {
+    font-size: 1.1em;
+    font-weight: 600;
+    border-bottom: 2px solid rgb(150, 0, 0);
+  }
+`
 
 const EditBoardModalOverlay = () => {
   const { userDocumentStub } = useFirestore()
@@ -55,9 +142,6 @@ const EditBoardModalOverlay = () => {
       console.error(e)
     }
   }
-  const handleCancel = (e) => {
-    redirect(`/settings`)
-  }
 
   const handleBoardDelete = async (e) => {
     const confirmed = confirm(
@@ -82,100 +166,105 @@ const EditBoardModalOverlay = () => {
 
   return (
     <PageOverlay origin="/settings" className="edit-board">
-      <header>
-        <h4
-          style={{
-            display: `flex`,
-            justifyContent: `center`,
-            alignItems: `flex-end`,
-            marginBottom: `2.5vh`,
-            marginLeft: `1ch`,
-          }}
-        >
-          Editing <Title initial={title} ref={register} />
-        </h4>
-      </header>
-      <form onSubmit={handleSubmit(handleSave)} className="edit-board-form">
-        <fieldset>
-          <legend>Colors </legend>
-          <div className="emoji-color-pairs">
-            {symbols.map(({ emoji, color }) => (
-              <div key={emoji} className="emoji-color-input-container">
-                <div>
-                  Emoji: <span className="emoji">{emoji}</span>
+      <OverlayParent>
+        <header>
+          <h4>
+            Editing <Title initial={title} ref={register} />
+          </h4>
+        </header>
+        <form onSubmit={handleSubmit(handleSave)} className="edit-board-form">
+          <fieldset>
+            <legend>Colors </legend>
+            <div className="emoji-color-pairs">
+              {symbols.map(({ emoji, color }) => (
+                <div key={emoji} className="emoji-color-input-container">
+                  <div>
+                    Emoji: <span className="emoji">{emoji}</span>
+                  </div>
+                  <ColorPicker initial={color} formId={emoji} ref={register} />
                 </div>
-                <ColorPicker initial={color} formId={emoji} ref={register} />
-              </div>
-            ))}
+              ))}
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>Binary tracking</legend>
+            <p
+              style={{
+                color: `#666`,
+                fontSize: `.9em`,
+                lineHeight: 1.25,
+                marginBottom: 6,
+              }}
+            >
+              Sometimes you might want to track whether or not you made a report
+              on a day rather than how many reports you made. Check this box to
+              tell the app that this is an on/off–style calendar.
+            </p>
+            <div style={{ display: `flex`, alignItems: `center` }}>
+              <label htmlFor="formBinary">Binary tracking </label>
+              <input
+                type="checkbox"
+                ref={register}
+                name="formBinary"
+                id="formBinary"
+                defaultChecked={binary}
+              ></input>
+            </div>
+          </fieldset>
+          <div className="confirmation-options">
+            <button type="submit" title="Save" name="confirm">
+              Save
+            </button>
           </div>
-        </fieldset>
-        <fieldset>
-          <legend>Binary tracking</legend>
-          <p
-            style={{
-              color: `#666`,
-              fontSize: `.9em`,
-              lineHeight: 1.25,
-              marginBottom: 6,
-            }}
-          >
-            Sometimes you might want to track whether or not you made a report
-            on a day rather than how many reports you made. Check this box to
-            tell the app that this is an on/off–style calendar.
-          </p>
-          <div style={{ display: `flex`, alignItems: `center` }}>
-            <label htmlFor="formBinary">Binary tracking </label>
-            <input
-              type="checkbox"
-              ref={register}
-              name="formBinary"
-              id="formBinary"
-              defaultChecked={binary}
-            ></input>
-          </div>
-        </fieldset>
-        <div className="confirmation-options">
-          <button type="submit" title="Save" name="confirm">
-            Save
+        </form>
+        <div style={{ display: `flex`, justifyContent: `center` }}>
+          <button onClick={handleBoardDelete} name="delete">
+            Delete board
           </button>
         </div>
-      </form>
-      <div style={{ display: `flex`, justifyContent: `center` }}>
-        <button onClick={handleBoardDelete} name="delete">
-          Delete board
-        </button>
-      </div>
+      </OverlayParent>
     </PageOverlay>
   )
 }
 
 export default EditBoardModalOverlay
 
-// const EmojiColorPair = forwardRef(({ emoji, color, formId }, ref) => (
-//   <>
-//     <EmojiPicker initial={emoji} formId={formId} ref={ref} />
-//     <ColorPicker initial={color} formId={formId} ref={ref} />
-//   </>
-// ))
+const ColorPickerParent = styled.div`
+  display: flex;
+  align-items: center;
 
-// const EmojiPicker = forwardRef(({ initial, formId }, ref) => (
-//   <div className="emoji-picker">
-//     <label htmlFor={`emoji-input-${formId}`}>Emoji: </label>
-//     <input
-//       ref={ref}
-//       defaultValue={initial}
-//       name={`emoji-${formId}`}
-//       className="emoji-input"
-//       id={`emoji-input-${formId}`}
-//     />
-//   </div>
-// ))
+  label {
+    margin-right: 6px;
+  }
+
+  .color-picker-bg {
+    height: var(--input-width);
+    width: var(--input-width);
+    position: relative;
+    border: 1px solid whitesmoke;
+    border-radius: 50%;
+
+    > * {
+      position: absolute;
+      display: block;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    input {
+      opacity: 0;
+      font-size: 16px;
+    }
+  }
+`
 
 const ColorPicker = forwardRef(({ initial, formId }, ref) => {
   const [color, setColor] = useState(initial)
 
   return (
-    <div className="color-picker">
+    <ColorPickerParent>
       <label htmlFor={`color-input-${formId}`}>Color: </label>
       <div className="color-picker-bg" style={{ background: color }}>
         <input
@@ -188,7 +277,7 @@ const ColorPicker = forwardRef(({ initial, formId }, ref) => {
           id={`color-input-${formId}`}
         />
       </div>
-    </div>
+    </ColorPickerParent>
   )
 })
 

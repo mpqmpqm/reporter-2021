@@ -1,7 +1,68 @@
 import { forwardRef, useEffect, useRef } from "react"
 import { Link } from "react-router-dom"
+import styled from "styled-components"
 import DayContentful from "./DayContentful"
 import DayEmpty from "./DayEmpty"
+
+const GridItem = styled.div`
+  width: 100%;
+  position: relative;
+  padding-top: 100%;
+  ${(props) =>
+    props.primary &&
+    css`
+      background: palevioletred;
+      color: white;
+    `};
+
+  > * {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  p {
+    color: #666;
+    font-size: 8px;
+    transform: translateX(-4px);
+  }
+
+  svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    transform: rotateZ(180deg);
+
+    &.empty {
+      fill: rgb(32, 32, 32);
+    }
+  }
+`
+
+const SVGClipContainer = styled.div`
+  clip-path: circle(47.5%);
+  transform-origin: center;
+`
+
+const TodayGraph = styled.div`
+  flex-grow: 1;
+  grid-area: all;
+  display: flex;
+  flex-direction: column;
+
+  svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    transform: rotateZ(180deg);
+  }
+`
 
 const DayReceiver = forwardRef(
   (
@@ -43,13 +104,9 @@ const DayReceiver = forwardRef(
     })
 
     return calendar ? (
-      <div
-        className="day-receiver-grid-item"
-        style={{ gridColumnStart: startOfMonth && startOfMonth + 1 }}
-      >
+      <GridItem style={{ gridColumnStart: startOfMonth && startOfMonth + 1 }}>
         <p>{day}</p>
-
-        <div className="svg-clip-container" ref={svgContainer}>
+        <SVGClipContainer ref={svgContainer}>
           {contentful ? (
             <Link
               to={`/calendar/${year}/${month}/${day}`}
@@ -73,10 +130,10 @@ const DayReceiver = forwardRef(
           ) : (
             <DayEmpty ref={svgContainer} binary={binary} />
           )}
-        </div>
-      </div>
+        </SVGClipContainer>
+      </GridItem>
     ) : (
-      <div className="today-vote-graph" ref={svgContainer}>
+      <TodayGraph ref={svgContainer}>
         {contentful ? (
           <DayContentful
             ref={ref}
@@ -92,7 +149,7 @@ const DayReceiver = forwardRef(
         ) : (
           <DayEmpty binary={binary} />
         )}
-      </div>
+      </TodayGraph>
     )
   }
 )

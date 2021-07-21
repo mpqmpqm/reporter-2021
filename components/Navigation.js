@@ -1,11 +1,56 @@
 import { Link, useLocation } from "react-router-dom"
+import styled from "styled-components"
+
+const Nav = styled.nav`
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding-bottom: 4%;
+  padding-top: 12px;
+  border-top: 1px solid var(--nav-color);
+
+  .icon-link {
+    width: 100%;
+    background-color: black;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid var(--nav-color);
+
+    &:last-child {
+      border-right: none;
+    }
+  }
+
+  a,
+  svg {
+    display: block;
+  }
+
+  a {
+    width: 90%;
+    margin: 0 auto;
+  }
+
+  svg {
+    width: 32px;
+    height: 32px;
+    stroke: var(--nav-color);
+    fill: var(--nav-color);
+    margin: 0 auto;
+  }
+`
 
 export const NavBar = (props) => {
   const { pathname } = useLocation()
 
   const base = pathname.match(/\/.*?(?=($|\/))/)[0]
   return (
-    <nav className="nav-bar">
+    <Nav>
       <Icon
         to="/settings"
         title="Settings"
@@ -19,7 +64,7 @@ export const NavBar = (props) => {
         Component={Calendar}
         {...{ base }}
       />
-    </nav>
+    </Nav>
   )
 }
 

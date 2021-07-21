@@ -1,3 +1,4 @@
+import styled from "styled-components"
 import Legend from "../components/Legend"
 import { Month, ThisMonth } from "../components/Month"
 import { useSelectedBoard } from "../context/SelectedBoardContextProvider"
@@ -7,6 +8,11 @@ import {
   isEndOfMonthBeforeCreatedAt,
 } from "../helper-fns/helper-fns"
 import View from "./View"
+
+const ScrollContainer = styled.div`
+  flex-grow: 1;
+  overflow-y: auto;
+`
 
 const Calendar = () => {
   const {
@@ -33,10 +39,10 @@ const Calendar = () => {
   return (
     <View pageTitle={title} id="Calendar">
       <Legend {...{ emojiList, colorDict }} />
-      <div id="calendar-scroll">
+      <ScrollContainer>
         <ThisMonth {...{ emojiList, colorDict, binary }} />
         {buildMonths(getMonthBefore({ date: new Date(todayDateString) }))}
-      </div>
+      </ScrollContainer>
     </View>
   )
 }

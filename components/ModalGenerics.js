@@ -1,9 +1,45 @@
 import { motion } from "framer-motion"
 import { Link } from "react-router-dom"
+import styled from "styled-components"
+
+const PageOverlayParent = styled(motion.div)`
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  right: 0;
+  color: white;
+  z-index: 99;
+  background-color: rgba(15, 15, 15, 0.95);
+  backdrop-filter: grayscale(1) blur(10px);
+  display: flex;
+  flex-direction: column;
+
+  .dismiss-modal {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 12px;
+    z-index: 999;
+  }
+`
+
+const ModalParent = styled(motion.div)`
+  width: 100%;
+  padding: 10% 7.5% 0;
+  margin: 0 auto 2.5%;
+  min-height: 70%;
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  overflow-y: auto;
+`
 
 const PageOverlay = ({ children, className, origin }) => (
-  <motion.div
-    className={`modal-page-overlay ${className ? className : ``}`}
+  <PageOverlayParent
+    className={className}
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     exit={{ opacity: 0, transition: { duration: 2 } }}
@@ -13,19 +49,19 @@ const PageOverlay = ({ children, className, origin }) => (
       <DismissButton />
     </Link>
     <Modal {...{ className }}>{children}</Modal>
-  </motion.div>
+  </PageOverlayParent>
 )
 
 const Modal = ({ children, className }) => (
-  <motion.div
-    className={`modal-content ${className ? className : ``}`}
+  <ModalParent
+    className={className}
     initial={{ y: 200, opacity: 0 }}
     animate={{ y: 0, opacity: 1 }}
     exit={{ opacity: 0, transition: { duration: 0.15 } }}
     transition={{ duration: 0.2 }}
   >
     {children}
-  </motion.div>
+  </ModalParent>
 )
 
 const DismissButton = () => (

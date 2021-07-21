@@ -1,5 +1,6 @@
 import { Route } from "react-router"
 import { Link } from "react-router-dom"
+import styled, { css } from "styled-components"
 import BoardList from "../components/BoardList"
 import CreateBoardModal from "../components/CreateBoardModal"
 import EditBoardModalOverlay from "../components/EditBoardModal"
@@ -7,6 +8,60 @@ import { useBoardSettings } from "../context/BoardSettingsContextProvider"
 import { useSelectedBoard } from "../context/SelectedBoardContextProvider"
 import { firebase } from "../firebase/firebaseClient"
 import View from "./View"
+
+const SettingsStyleVars = css`
+  --padding-sides: 16px;
+  --spacing: 4px;
+`
+
+const BoardSelector = styled.div`
+  ${SettingsStyleVars}
+  margin: 8px 0;
+  margin-bottom: 10vh;
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-bottom: var(--spacing);
+    margin-bottom: var(--spacing);
+    border-bottom: 1px solid whitesmoke;
+    padding: var(--spacing) var(--padding-sides);
+    padding-left: calc(var(--padding-sides) * 0.75);
+
+    h3 {
+      font-weight: 500;
+    }
+  }
+
+  #add-board,
+  #sign-out {
+    -webkit-appearance: none;
+    color: inherit;
+    border: none;
+    background: none;
+    display: block;
+  }
+
+  #add-board {
+    font-size: 1.4em;
+    text-align: center;
+    margin-top: 6px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+`
+
+const SignoutParent = styled.div`
+  ${SettingsStyleVars}
+  button {
+    padding-left: var(--padding-sides);
+    font-size: 1.4rem;
+    font-weight: 500;
+  }
+`
 
 const Settings = () => {
   const { updateBoardSelection, availableBoards, addBoard } = useBoardSettings()
@@ -21,7 +76,7 @@ const Settings = () => {
   return (
     <View pageTitle="Settings" id="Settings">
       <div>
-        <div className="board-selector">
+        <BoardSelector>
           <header>
             <h3>Your boards</h3>
           </header>
@@ -47,15 +102,15 @@ const Settings = () => {
               />
             </>
           ) : null}
-          <div className="board-option add">
+          <div id="add-board">
             <Link to="/settings/add">+ Add a board</Link>
           </div>
-        </div>
-        <div>
+        </BoardSelector>
+        <SignoutParent>
           <button id="sign-out" onClick={signOut}>
             Sign out
           </button>
-        </div>
+        </SignoutParent>
         <Route path="/settings/add/">
           <CreateBoardModal />
         </Route>

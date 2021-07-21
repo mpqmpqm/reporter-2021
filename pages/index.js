@@ -1,6 +1,6 @@
-import Head from "next/head"
 import nookies from "nookies"
 import { Route, Switch } from "react-router-dom"
+import styled from "styled-components"
 import { NavBar } from "../components/Navigation"
 import AppContextProvider from "../context/AppContextProvider"
 import { useSelectedBoard } from "../context/SelectedBoardContextProvider"
@@ -25,50 +25,55 @@ export default function Home({ onboarded, hostname }) {
   )
 }
 
+const Container = styled.div`
+  height: 100vh;
+  height: -webkit-fill-available;
+  display: flex;
+  flex-direction: column;
+`
+
 const App = ({ onboarded }) => {
   const { user } = useAuth()
   const { selectedBoard } = useSelectedBoard()
 
   return (
-    <>
-      <div className="App">
-        {user && selectedBoard ? (
-          selectedBoard.id ? (
-            <Switch>
-              <Route path="/settings">
-                <Settings />
+    <Container className="App">
+      {user && selectedBoard ? (
+        selectedBoard.id ? (
+          <Switch>
+            <Route path="/settings">
+              <Settings />
+            </Route>
+            <Route path="/calendar">
+              <Calendar />
+            </Route>
+            {dev && (
+              <Route path="/demo">
+                <DemoForm />
               </Route>
-              <Route path="/calendar">
-                <Calendar />
-              </Route>
-              {dev && (
-                <Route path="/demo">
-                  <DemoForm />
-                </Route>
-              )}
-              <Route path="/">
-                <Vote />
-              </Route>
-            </Switch>
-          ) : (
-            <Switch>
-              <Route path="/settings">
-                <Settings />
-              </Route>
-              <Route path="/calendar">
-                <CalendarEmpty />
-              </Route>
-              <Route path="/">
-                <VoteEmpty />
-              </Route>
-            </Switch>
-          )
+            )}
+            <Route path="/">
+              <Vote />
+            </Route>
+          </Switch>
         ) : (
-          <Loading />
-        )}
-        <NavBar />
-      </div>
-    </>
+          <Switch>
+            <Route path="/settings">
+              <Settings />
+            </Route>
+            <Route path="/calendar">
+              <CalendarEmpty />
+            </Route>
+            <Route path="/">
+              <VoteEmpty />
+            </Route>
+          </Switch>
+        )
+      ) : (
+        <Loading />
+      )}
+      <NavBar />
+    </Container>
   )
 }
 
